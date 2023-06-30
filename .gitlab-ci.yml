@@ -11,10 +11,20 @@ include:
       - jobs/lint-pre-commit.yaml
 
 
-build-ucs-base:
+build-ucs-base-matrix:
   stage: build
   extends: .kaniko
   needs: []
+  parallel:
+    matrix:
+      - UCS_VERSION:
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
-    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base"
+    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
+    KANIKO_ARGS: >-
+      --build-arg UCS_VERSION=${UCS_VERSION}
