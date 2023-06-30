@@ -10,16 +10,16 @@ SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /
 
-RUN \
-    apt-get --quiet update && \
+RUN apt-get --quiet update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
-    ca-certificates=20* \
-    curl=7.64.* \
-    gpg=2.2.* \
-    gpg-agent=2.2.* \
-    patch=2.7.* && \
-    curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+      # Required so that the certificates of https://updates.software-univention.de are
+      # trusted.
+      ca-certificates=20* \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+# hadolint ignore=DL3020
+ADD ${APT_KEY_URL} /etc/apt/trusted.gpg.d/univention-archive-key-ucs-5x.gpg
+RUN chmod a+r /etc/apt/trusted.gpg.d/univention-archive-key-ucs-5x.gpg
 
 COPY sources-${UCS_VERSION}.list /etc/apt/sources.list.d/15_ucs-online-version.list
