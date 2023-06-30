@@ -31,9 +31,25 @@ We try to apply the DRY (Don't repeat yourself) principle. It is tagged as
 
 ## Example usage
 
-TODO: Give TL;DR style hint on how to use this.
+```Dockerfile
 
+FROM gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ucs-base/ucs-base-504:latest AS ucs-base
+
+RUN apt-get update \
+    && apt-get --assume-yes --verbose-versions --no-install-recommends install \
+      python3-univention-directory-manager-rest-client=10.* \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+```
 
 ## Development setup
 
-TODO: Give a TL;DR style hint on how to develop with this.
+There is no special setup needed. Use the plain `docker` CLI commands to work on
+the container images:
+
+```shell
+# Build example
+docker build --platform linux/amd64 --build-arg UCS_VERSION=503 docker/ucs-base -t wip
+
+# Run a shell to inspect the result
+docker run -it --rm wip bash
+```
