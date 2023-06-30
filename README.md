@@ -1,17 +1,19 @@
 # Container UCS Base
 
-TODO: Summarize the project
+This project does build a few container images which are prepared so that UCS
+packages can be installed.
+
+It started based from a fragment which we saw being repeated over and over
+across many of our `Dockerfile` files.
 
 
-## Status
+## Status - Beta
 
-TODO: Be clear if this is a prototype, and experiment or a production grade
-piece of software.
+We try to apply the DRY (Don't repeat yourself) principle. It is tagged as
+"Beta" since we have only little experience so far with the approach.
 
 
 ## Contact
-
-TODO: Make it easy to get in touch with you.
 
 - Team SouvAP Dev
   - <johannes.bornhold.extern@univention.de>
@@ -19,14 +21,9 @@ TODO: Make it easy to get in touch with you.
 
 ## Example usage
 
-TODO: If applicable, give TL;DR style hint on how to use this.
+TODO: Give TL;DR style hint on how to use this.
 
 
 ## Development setup
 
-TODO: If applicable, give a TL;DR style hint on how to develop with this.
-
-
-## Related
-
-TODO: Add points to related things.
+TODO: Give a TL;DR style hint on how to develop with this.
