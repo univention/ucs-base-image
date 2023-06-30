@@ -6,6 +6,16 @@ packages can be installed.
 It started based from a fragment which we saw being repeated over and over
 across many of our `Dockerfile` files.
 
+The images are tagged according to the following pattern:
+
+```
+ucs-base-${UCS_VERSION}:${IMAGE_TAG}
+```
+
+- `${UCS_VERSION}` is a value like `504`
+- `${IMAGE_TAG}` is a tag generated from the CI run, e.g. `latest`, `branch-example`.
+
+
 
 ## Status - Beta
 
