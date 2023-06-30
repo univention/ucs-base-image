@@ -6,5 +6,15 @@ include:
       - jobs/sphinx-docs.yaml
       - defaults/souvap-workflow.yaml
       - defaults/stages.yaml
+      - templates/kaniko.yaml
       - jobs/lint-commit-messages.yaml
       - jobs/lint-pre-commit.yaml
+
+
+build-ucs-base:
+  stage: build
+  extends: .kaniko
+  needs: []
+  variables:
+    KANIKO_BUILD_CONTEXT: "docker/ucs-base"
+    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base"
