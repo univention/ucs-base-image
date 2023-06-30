@@ -4,6 +4,7 @@ ARG DOCKER_PROXY
 FROM ${DOCKER_PROXY}debian:${DEBIAN_BASE_IMAGE_TAG} AS ucs-base
 
 ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
+ARG UCS_VERSION=504
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
@@ -21,4 +22,4 @@ RUN \
     curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-COPY sources.list /etc/apt/sources.list.d/15_ucs-online-version.list
+COPY sources-${UCS_VERSION}.list /etc/apt/sources.list.d/15_ucs-online-version.list
