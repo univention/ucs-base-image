@@ -9,5 +9,6 @@ Container UCS Base
    about
    changelog
    ucs-base
+   ucs-base-dev
    genindex
    glossary

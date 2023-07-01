@@ -70,6 +70,24 @@ build-ucs-base-dev-matrix:
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
 
 
+test-ucs-base-dev-usage-example:
+  stage: build
+  extends: .kaniko
+  needs:
+    - job: build-ucs-base-dev-matrix
+      artifacts: true
+  variables:
+    UCS_VERSION: 504
+    KANIKO_BUILD_CONTEXT: "docker/ucs-base-dev"
+    DOCKERFILE_PATH: "docker/ucs-base-dev/Dockerfile.usage-example"
+    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-usage-example"
+    KANIKO_CACHE_ARGS: ""
+    KANIKO_ARGS: >-
+      --no-push
+      --build-arg UCS_VERSION=${UCS_VERSION}
+      --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
+
+
 release:
   # TODO: Make a base image for this tool
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:18-buster-slim"
