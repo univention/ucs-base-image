@@ -19,17 +19,17 @@ Be aware that the base containers do include the errata releases as well by
 default. This means that your images will potentially change if they are built
 again in the future.
 
-
 ## Status - Beta
 
 We try to apply the DRY (Don't repeat yourself) principle. It is tagged as
 "Beta" since we have only little experience so far with the approach.
 
 
-## Contact
+## Provided images
 
-- Team SouvAP Dev
-  - <johannes.bornhold.extern@univention.de>
+- `ucs-base-${UCS_VERSION}` allows to install published Univention packages.
+- `ucs-base-dev-${UCS_VERSION}` has in addition the key from `omar` installed
+  and has a utility to add the sources of a branch from the `ucs` repository.
 
 
 ## Example usage
@@ -56,3 +56,8 @@ docker build --platform linux/amd64 --build-arg UCS_VERSION=503 docker/ucs-base 
 # Run a shell to inspect the result
 docker run -it --rm wip bash
 ```
+
+## Contact
+
+- Team SouvAP Dev
+  - <johannes.bornhold.extern@univention.de>
