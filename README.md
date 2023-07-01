@@ -15,6 +15,9 @@ ucs-base-${UCS_VERSION}:${IMAGE_TAG}
 - `${UCS_VERSION}` is a value like `504`
 - `${IMAGE_TAG}` is a tag generated from the CI run, e.g. `latest`, `branch-example`.
 
+Be aware that the base containers do include the errata releases as well by
+default. This means that your images will potentially change if they are built
+again in the future.
 
 
 ## Status - Beta

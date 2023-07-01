@@ -8,5 +8,6 @@ Container UCS Base
 
    about
    changelog
+   ucs-base
    genindex
    glossary
