@@ -1,0 +1,8 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_src_path: ../team-souvap/templates/repo-component
+contact_email: johannes.bornhold.extern@univention.de
+project_author: Team SouvAP Dev
+project_copyright: 2023, Univention GmbH
+project_name: Container UCS Base
+project_slug: container-ucs-base
+project_url: https://git.knut.univention.de/univention/customers/dataport/upx/container-ucs-base

@@ -6,5 +6,43 @@ include:
       - jobs/sphinx-docs.yaml
       - defaults/souvap-workflow.yaml
       - defaults/stages.yaml
+      - templates/kaniko.yaml
       - jobs/lint-commit-messages.yaml
       - jobs/lint-pre-commit.yaml
+
+
+build-ucs-base-matrix:
+  stage: build
+  extends: .kaniko
+  needs: []
+  parallel:
+    matrix:
+      - UCS_VERSION:
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+  variables:
+    KANIKO_BUILD_CONTEXT: "docker/ucs-base"
+    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
+    KANIKO_ARGS: >-
+      --build-arg UCS_VERSION=${UCS_VERSION}
+
+
+test-ucs-base-usage-example:
+  stage: build
+  extends: .kaniko
+  needs:
+    - job: build-ucs-base-matrix
+      artifacts: true
+  variables:
+    UCS_VERSION: 504
+    KANIKO_BUILD_CONTEXT: "docker/ucs-base"
+    DOCKERFILE_PATH: "docker/ucs-base/Dockerfile.usage-example"
+    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-usage-example"
+    KANIKO_CACHE_ARGS: ""
+    KANIKO_ARGS: >-
+      --no-push
+      --build-arg UCS_VERSION=${UCS_VERSION}
+      --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
