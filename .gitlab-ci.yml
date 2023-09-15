@@ -26,11 +26,15 @@ build-ucs-base-matrix:
           - 502
           - 503
           - 504
+          - 505
   variables:
-    KANIKO_BUILD_CONTEXT: "docker/ucs-base"
+    KANIKO_BUILD_CONTEXT: "docker"
+    APT_REPOSITORY: "http://updates.software-univention.de/"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
-    KANIKO_ARGS: >-
+    KANIKO_ARGS:
       --build-arg UCS_VERSION=${UCS_VERSION}
+      --build-arg APT_REPOSITORY=${APT_REPOSITORY}
+      --target final
 
 
 test-ucs-base-usage-example:
@@ -40,14 +44,13 @@ test-ucs-base-usage-example:
     - job: build-ucs-base-matrix
       artifacts: true
   variables:
-    UCS_VERSION: 504
-    KANIKO_BUILD_CONTEXT: "docker/ucs-base"
-    DOCKERFILE_PATH: "docker/ucs-base/Dockerfile.usage-example"
+    UCS_VERSION: 505
+    KANIKO_BUILD_CONTEXT: "docker"
+    DOCKERFILE_PATH: "docker/Dockerfile.usage-example"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-usage-example"
     KANIKO_CACHE_ARGS: ""
     KANIKO_ARGS: >-
       --no-push
-      --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
 
 
@@ -65,12 +68,15 @@ build-ucs-base-dev-matrix:
           - 502
           - 503
           - 504
+          - 505
   variables:
-    KANIKO_BUILD_CONTEXT: "docker/ucs-base-dev"
+    APT_REPOSITORY: "http://updates.knut.univention.de/"
+    KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
-    KANIKO_ARGS: >-
+    KANIKO_ARGS:
       --build-arg UCS_VERSION=${UCS_VERSION}
-      --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
+      --build-arg APT_REPOSITORY=${APT_REPOSITORY}
+      --target dev
 
 
 test-ucs-base-dev-usage-example:
@@ -80,14 +86,13 @@ test-ucs-base-dev-usage-example:
     - job: build-ucs-base-dev-matrix
       artifacts: true
   variables:
-    UCS_VERSION: 504
-    KANIKO_BUILD_CONTEXT: "docker/ucs-base-dev"
-    DOCKERFILE_PATH: "docker/ucs-base-dev/Dockerfile.usage-example"
+    UCS_VERSION: 505
+    KANIKO_BUILD_CONTEXT: "docker"
+    DOCKERFILE_PATH: "docker/dev.Dockerfile.usage-example"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-usage-example"
     KANIKO_CACHE_ARGS: ""
-    KANIKO_ARGS: >-
+    KANIKO_ARGS:
       --no-push
-      --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
 
 

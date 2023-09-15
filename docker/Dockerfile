@@ -1,9 +1,11 @@
 ARG DOCKER_PROXY
-FROM ${DOCKER_PROXY}debian:bullseye-slim AS builder
+FROM ${DOCKER_PROXY}debian:bookworm-slim AS builder
 
 # major.minor.patch with no separators
-ARG UCS_VERSION="504"
+ARG UCS_VERSION="505"
 ARG APT_REPOSITORY="https://updates.software-univention.de/"
+
+SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 RUN apt-get -qq update && apt-get -q install --assume-yes --no-install-recommends debootstrap findutils
 RUN sed -e '/required=/s/ usr-is-merged//' -i /usr/share/debootstrap/scripts/debian-common
@@ -26,8 +28,7 @@ RUN debootstrap \
 # Package installs happen during `docker build`, which gets restarted clean
 # after power loss and every build. This speeds up apt, specially on spinning
 # disks.
-RUN \
-    echo 'force-unsafe-io' > "/work/etc/dpkg/dpkg.cfg.d/docker-apt-speedup" && \
+RUN echo 'force-unsafe-io' > "/work/etc/dpkg/dpkg.cfg.d/docker-apt-speedup"
 
 # We don't need translations in docker images, since it wastes time and space.
 # If needed, remove the file and run `apt-get update` to get them.
@@ -50,11 +51,16 @@ RUN echo 'Apt::AutoRemove::SuggestsImportant "false";' > "/work/etc/apt/apt.conf
 
 RUN echo "deb ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list
 
-RUN echo 'machine updates.knut.univention.de/4.4/maintained/component/extsec4.4/ login univention password 5ztDpYrzapy6E' >>"/work/etc/apt/auth.conf"
 RUN chroot /work apt-get -qq update
 RUN chroot /work apt-get -q --assume-yes dist-upgrade
 RUN rm -rf /work/var/lib/apt/lists /work/var/cache/apt/archives
 RUN find /work/var '(' -name '*.deb' -o -name '*.log' -o -name '*.log.?z' -o -name '*-old' ')' -delete
+
+RUN rm -rf /work/dev; \
+    rm -rf /work/sys; \
+    rm -rf /work/proc; \
+    unlink /work/var/run; \
+    rm -rf /work/var/cache/apk/*
 
 
 FROM scratch as final
@@ -62,6 +68,7 @@ COPY --from=builder /work /
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 CMD ["bash"]
+
 
 FROM final as dev
 
