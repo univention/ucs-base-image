@@ -78,6 +78,26 @@ build-ucs-base-dev-matrix:
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
 
+build-ucs-base-test-dev-matrix:
+  stage: build
+  extends: .kaniko
+  needs:
+    - job: build-ucs-base-matrix
+      artifacts: true
+  parallel:
+    matrix:
+      - UCS_VERSION:
+          - 510
+          - 520
+  variables:
+    APT_REPOSITORY: "http://updates-test.software-univention.de/"
+    KANIKO_BUILD_CONTEXT: "docker"
+    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-test-${UCS_VERSION}-dev"
+    KANIKO_ARGS:
+      --build-arg UCS_VERSION=${UCS_VERSION}
+      --build-arg APT_REPOSITORY=${APT_REPOSITORY}
+      --target dev
+
 
 test-ucs-base-dev-usage-example:
   stage: build

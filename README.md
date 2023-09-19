@@ -51,11 +51,19 @@ the container images:
 
 ```shell
 # Build example
-docker build --platform linux/amd64 --build-arg UCS_VERSION=503 docker/ucs-base -t wip
+docker build --platform linux/amd64 --build-arg UCS_VERSION=503 docker -t wip
 
 # Run a shell to inspect the result
 docker run -it --rm wip bash
 ```
+
+## Produced images
+
+- `ucs-base-{500,501,502,503,504,505}`
+- `ucs-base-dev-{500,501,502,503,504,505}`
+- `ucs-base-test-dev-{510,520}`
+
+All with `latest` and semantic-release `v0.3.0` or lastest release.
 
 ## Contact
 
