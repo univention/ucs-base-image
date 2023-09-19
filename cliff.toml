@@ -41,13 +41,18 @@ filter_unconventional = true
 split_commits = false
 # regex for parsing and grouping commits
 commit_parsers = [
-    { message = "^.*: add", group = "Added" },
-    { message = "^.*: support", group = "Added" },
-    { message = "^.*: remove", group = "Removed" },
-    { message = "^.*: delete", group = "Removed" },
+    { message = "^docs", group = "Documentation" },
+    { message = "^feat", group = "Added" },
     { message = "^test", group = "Fixed" },
     { message = "^fix", group = "Fixed" },
-    { message = "^.*: fix", group = "Fixed" },
+    { message = "^upd", group = "Changed" },
+    { message = "^.*: [a|A]dd", group = "Added" },
+    { message = "^.*: [f|F]eat", group = "Added" },
+    { message = "^.*: [s|S]upport", group = "Added" },
+    { message = "^.*: [r|R]emove", group = "Removed" },
+    { message = "^.*: [d|D]elete", group = "Removed" },
+    { message = "^.*: [f|F]ix", group = "Fixed" },
+    { message = "^.*: [u|U]pdate", group = "Changed" },
     { message = "^.*", group = "Changed" },
 ]
 # protect breaking changes from being skipped due to matching a skipping commit_parser

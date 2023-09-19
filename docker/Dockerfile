@@ -35,15 +35,19 @@ RUN echo 'force-unsafe-io' > "/work/etc/dpkg/dpkg.cfg.d/docker-apt-speedup"
 RUN echo 'Acquire::Languages "none";' > "/work/etc/apt/apt.conf.d/docker-no-languages"
 
 # Request the `gz` index files for smaller images.
-RUN echo 'Acquire::GzipIndexes "true";' > "/work/etc/apt/apt.conf.d/docker-gzip-indexes"
-RUN echo 'Acquire::CompressionTypes::Order:: "gz";' >> "/work/etc/apt/apt.conf.d/docker-gzip-indexes"
+RUN echo 'Acquire::GzipIndexes "true";' > "/work/etc/apt/apt.conf.d/docker-gzip-indexes" && \
+    echo 'Acquire::CompressionTypes::Order:: "gz";' >> "/work/etc/apt/apt.conf.d/docker-gzip-indexes"
 
 # Remove the apt cache to make the image smaller by making the apt-get install
 # layers smaller.
-RUN echo 'DPkg::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' > "/work/etc/apt/apt.conf.d/docker-clean"
-RUN echo 'APT::Update::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' >> "/work/etc/apt/apt.conf.d/docker-clean"
-RUN echo 'Dir::Cache::pkgcache "";' >> "/work/etc/apt/apt.conf.d/docker-clean"
-RUN echo 'Dir::Cache::srcpkgcache "";' >> "/work/etc/apt/apt.conf.d/docker-clean"
+RUN \
+    echo 'DPkg::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' > "/work/etc/apt/apt.conf.d/docker-clean" && \
+    echo 'APT::Update::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' >> "/work/etc/apt/apt.conf.d/docker-clean" && \
+    echo 'APT::Install-Recommends "0";' >> "/work/etc/apt/apt.conf.d/docker-clean" && \
+    echo 'APT::Install-Suggests "0";' >> "/work/etc/apt/apt.conf.d/docker-clean" && \
+    echo 'Dir::Cache::pkgcache "";' >> "/work/etc/apt/apt.conf.d/docker-clean" && \
+    echo 'Dir::Cache::srcpkgcache "";' >> "/work/etc/apt/apt.conf.d/docker-clean"
+
 
 # apt aggressive about removing packages added when the package that sugested
 # another package is removed.

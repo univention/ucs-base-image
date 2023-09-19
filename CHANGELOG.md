@@ -7,35 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New Dockerfile with speed and size optimizations
+- New context and args for building
+
 ### Changed
 
 - Make sources.list preference more obvious
 - Point to a tag to include common-ci
-- New Dockerfile with speed and size optimizations
-- New context and args for building
+
+### Documentation
+
+- Added livehtml
 
 ### Fixed
 
 - Semantic-release changelog not generated
+- Changelog generation
 
 ## [0.1.0] - 2023-07-03
 
-### Changed
+### Added
 
-- Iterate on the README
 - Add container "ucs-base"
-- Build container "ucs-base"
-- Build ucs-base in a matrix over the ucs versions
 - Support UCS_VERSION as ARG for "ucs_base"
-- Use ADD to add the key
-- Explain tag structure
-- Add examples for usage and to develop
 - Add copier answers file
 - Add "docs/decisions" to capture relevant decisions
-- Capture decision about image naming scheme
-- Add usage example of "ucs-base"
 - Add release job to tag the version via semantic-release
 - Add "ucs-base-dev" to aid development with packages from omar
+
+### Changed
+
+- Build container "ucs-base"
+- Build ucs-base in a matrix over the ucs versions
+- Use ADD to add the key
+
+### Documentation
+
+- Iterate on the README
+- Explain tag structure
+- Add examples for usage and to develop
+- Capture decision about image naming scheme
+- Add usage example of "ucs-base"
 - Add overview of provided images into the README
 - Add usage example of the container ucs-base-dev
 
