@@ -96,7 +96,7 @@ build-ucs-base-test-dev-matrix:
     KANIKO_ARGS:
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
-      --target final
+      --target dev
 
 
 test-ucs-base-dev-usage-example:
