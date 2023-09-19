@@ -63,7 +63,7 @@ docker run -it --rm wip bash
 - `ucs-base-dev-{500,501,502,503,504,505}`
 - `ucs-base-test-dev-{510,520}`
 
-All with `latest` and semantic-release `v0.3.0` or lastest release.
+All with `latest` and semantic-release `v0.3.0` or latest release.
 
 ## Contact
 
