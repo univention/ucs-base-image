@@ -1,11 +1,32 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+
+This changelog documents all notable changes to the `ucs-base` image.
+
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.0] - 2023-09-19
+## Unreleased
+
+### Added
+
+- Generate 5.2-0 and 5.1-0 images
+
+### Changed
+
+- Changelog [ci skip]
+
+### Documentation
+
+- Changelog introduction and formatting
+- Typo
+
+### Fixed
+
+- Target for test images
+
+## 0.3.0 - 2023-09-19
 
 ### Added
 
@@ -26,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Semantic-release changelog not generated
 - Changelog generation
 
-## [0.1.0] - 2023-07-03
+## 0.1.0 - 2023-07-03
 
 ### Added
 
@@ -53,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add overview of provided images into the README
 - Add usage example of the container ucs-base-dev
 
-## [0.0.0] - 2023-06-30
+## 0.0.0 - 2023-06-30
 
 ### Changed
 
