@@ -17,5 +17,5 @@ The intended usage consists of the following steps:
 
 The following example does apply the steps:
 
-.. literalinclude:: ../docker/ucs-base-dev/Dockerfile.usage-example
+.. literalinclude:: ../docker/dev.Dockerfile.usage-example
    :language: Dockerfile
