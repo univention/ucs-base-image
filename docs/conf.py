@@ -44,6 +44,7 @@ extensions = [
     'myst_parser',
     'sphinx.ext.ifconfig',
     'sphinx.ext.todo',
+    'myst_parser',
 ]
 
 intersphinx_mapping = {
@@ -108,6 +109,7 @@ if "spelling" in sys.argv:
     spelling_lang = "en_US"
     spelling_show_suggestions = True
     spelling_word_list_filename = ["spelling_wordlist"]
+    spelling_exclude_patterns = ["changelog.md"]
 
 tls_cacerts = {
 }
@@ -144,5 +146,5 @@ latex_documents = [
 latex_elements = {
     "papersize": "a4paper",
 }
-
+source_suffix = ['.rst', '.md']
 univention_doc_basename = ""

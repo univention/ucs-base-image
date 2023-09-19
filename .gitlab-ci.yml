@@ -95,6 +95,19 @@ test-ucs-base-dev-usage-example:
       --no-push
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
 
+changelog:
+  image:
+    name: orhunp/git-cliff:latest
+    entrypoint: [""]
+  variables:
+    GIT_STRATEGY: clone # clone entire repo instead of reusing workspace
+    GIT_DEPTH: 0 # avoid shallow clone to give cliff all the info it needs
+  stage: package
+  script:
+    - git-cliff -r . > CHANGELOG.md
+  artifacts:
+    paths:
+      - CHANGELOG.md
 
 release:
   # TODO: Make a base image for this tool
