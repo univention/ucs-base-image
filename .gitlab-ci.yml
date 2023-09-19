@@ -102,7 +102,7 @@ release:
   stage: package
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates
-    - npm install -g semantic-release @semantic-release/gitlab conventional-changelog-conventionalcommits
+    - npm install -g semantic-release @semantic-release/gitlab @semantic-release/changelog conventional-changelog-conventionalcommits
   script:
     - semantic-release
   rules:
