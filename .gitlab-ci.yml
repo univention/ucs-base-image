@@ -14,7 +14,7 @@ include:
       - "jobs/lint-pre-commit.yaml"
 
 
-build-ucs-base-matrix:
+build-ucs-base-50X-matrix:
   stage: build
   extends: .kaniko
   needs: []
@@ -54,7 +54,7 @@ test-ucs-base-usage-example:
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
 
 
-build-ucs-base-dev-matrix:
+build-ucs-base-dev-50X-matrix:
   stage: build
   extends: .kaniko
   needs:
@@ -78,22 +78,35 @@ build-ucs-base-dev-matrix:
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
 
-build-ucs-base-test-dev-matrix:
+build-ucs-base-test-dev-510:
   stage: build
   extends: .kaniko
   needs:
     - job: build-ucs-base-matrix
       artifacts: true
-  parallel:
-    matrix:
-      - UCS_VERSION:
-          - 510
-          - 520
   variables:
+    UCS_VERSION: 510
     APT_REPOSITORY: "http://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-test-${UCS_VERSION}-dev"
     KANIKO_ARGS:
+      --build-arg UCS_VERSION=${UCS_VERSION}
+      --build-arg APT_REPOSITORY=${APT_REPOSITORY}
+      --target dev
+
+build-ucs-base-test-dev-520:
+  stage: build
+  extends: .kaniko
+  needs:
+    - job: build-ucs-base-matrix
+      artifacts: true
+  variables:
+    UCS_VERSION: 520
+    APT_REPOSITORY: "http://updates-test.software-univention.de/"
+    KANIKO_BUILD_CONTEXT: "docker"
+    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-test-${UCS_VERSION}-dev"
+    KANIKO_ARGS:
+      --dockerfile usr-merge.Dockerfile
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
