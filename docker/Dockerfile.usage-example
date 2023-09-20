@@ -1,9 +1,9 @@
-ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ucs-base/ucs-base-505
 ARG UCS_BASE_IMAGE_TAG=latest
+ARG UCS_VERSION=505
 
-FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG}
+FROM gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ucs-base/ucs-base-${UCS_VERSION}:${UCS_BASE_IMAGE_TAG}
 
 RUN apt-get update \
     && apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      python3-univention-directory-manager-rest-client=10.* \
+      python3-univention-config-registry \
     && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
