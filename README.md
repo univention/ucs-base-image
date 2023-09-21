@@ -37,7 +37,6 @@ a branch from the `ucs` repository.
 ## Example usage
 
 ```Dockerfile
-
 FROM gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ucs-base/ucs-base-502:latest AS ucs-base
 
 RUN apt-get update \
@@ -53,7 +52,7 @@ the container images:
 
 ```shell
 # Build example
-docker build --platform linux/amd64 --build-arg UCS_VERSION=502 docker -t wip
+docker build --platform linux/amd64 --build-arg UCS_VERSION=502 -t wip .
 
 # Run a shell to inspect the result
 docker run -it --rm wip bash
