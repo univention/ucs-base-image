@@ -40,7 +40,8 @@ if /usr/bin/find "/entrypoint.d/" -mindepth 1 -maxdepth 1 -type f -print -quit 2
     entrypoint_log "$0: /entrypoint.d/ is not empty, will attempt to perform configuration"
 
     entrypoint_log "$0: Looking for shell scripts in /entrypoint.d/"
-    find "/entrypoint.d/" -follow -type f -print | sort -V | while read -r f; do
+    for f in $(find "/entrypoint.d/" -follow -type f -print | sort -V)
+    do
         case "$f" in
             *.envsh)
                 if [ -x "$f" ]; then
