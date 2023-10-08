@@ -70,6 +70,9 @@ FROM scratch as final
 COPY --from=builder /work /
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
+RUN mkdir /entrypoint.d
+COPY entrypoint.sh /
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["bash"]
 
 
