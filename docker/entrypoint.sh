@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This implementation is based on the file from
 # https://github.com/nginxinc/docker-nginx/blob/4b0d808b8f320df132c154a974ebe46e9e5f5ffe/entrypoint/docker-entrypoint.sh
