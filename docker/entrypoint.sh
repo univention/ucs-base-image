@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This experiment is based on the file from
 # https://github.com/nginxinc/docker-nginx/blob/master/entrypoint/entrypoint.sh
