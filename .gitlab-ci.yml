@@ -171,21 +171,14 @@ changelog:
     GIT_DEPTH: 0 # avoid shallow clone to give cliff all the info it needs
   stage: package
   script:
-    - git-cliff -r . > CHANGELOG.md
+    - |
+      apt update && apt install -y git
+      git-cliff -c cliff.toml -o CHANGELOG.md
+      git add CHANGELOG.md
+      if [ -n $GIT_COMMIT_TAG]; then git commit -m "chore(release): $CI_COMMIT_TAG"; else echo "Not creating a release in the changelog"; fi
+      git push origin HEAD:$CI_COMMIT_REF_NAME
   artifacts:
     paths:
       - CHANGELOG.md
-
-release:
-  # TODO: Make a base image for this tool
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:18-buster-slim"
-  stage: package
-  before_script:
-    - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates
-    - npm install -g semantic-release @semantic-release/gitlab @semantic-release/changelog conventional-changelog-conventionalcommits
-  script:
-    - semantic-release
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
 
 ...
