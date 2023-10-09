@@ -45,6 +45,29 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 ```
 
+### Entrypoint handling
+
+The image contains the file `docker/entrypoint.sh` in `/entrypoint.sh`.
+Ideally any derived containers should run it as follows:
+```Dockerfile
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["/path/to/application", "--argument", "value"]
+```
+
+Any preparation of the environment can be done by copying a shell script
+into the `/entrypoint.d/` folder.
+
+Preferably the file names should follow the pattern of `[0-9][0-9]-name.(envsh|sh)`.
+The number in the beginning determines the order in which the entrypoints are executed.
+
+File whose names end with `.envsh` are `source`d (i.e. good for setting environment variables),
+while those ending with `.sh` are running in a sub-shell.
+
+Please do _not_ put a `99-run.sh` to run your application,
+as this makes debugging tedious.
+Instead define the `CMD` as above.
+This way, anyone can `docker run ... bash` to enter a shell inside the prepared environment.
+
 ## Development setup
 
 There is no special setup needed. Use the plain `docker` CLI commands to work on
