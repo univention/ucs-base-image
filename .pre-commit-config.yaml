@@ -3,11 +3,9 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 
-exclude: '^.*\.patch|^frontend/src/apis/notifications/.*$'
-
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.4.0
+  rev: v4.4.0
   hooks:
   # "Check for added large files"
   - id: check-added-large-files
@@ -24,36 +22,14 @@ repos:
   # "Trim Trailing Whitespace"
   - id: trailing-whitespace
 
-# "Python blocks in UCR config templates"
-- repo: https://git.knut.univention.de/univention/dist/pre-commit-ucr
-  rev: '0.0.9'
-  hooks:
-    - id: ucr-flake8
-    - id: ucr-ruff
-    - id: ucr-autopep8
-      stages: [ manual ]
-    - id: ucr-ruff-fix
-      stages: [ manual ]
-
 # "Commit messages"
 - repo: https://github.com/compilerla/conventional-pre-commit
-  rev: v2.1.1
+  rev: v2.4.0
   hooks:
     - id: conventional-pre-commit
       stages: [commit-msg]
 
-# "Debian package related control fiels"
-- repo: https://git.knut.univention.de/univention/dist/pre-commit-debian.git
-  rev: v1.0.0
-  hooks:
-  - id: debian-control
-
-# "flake8"
-- repo: https://github.com/PyCQA/flake8
-  rev: 5.0.4
-  hooks:
-  - id: flake8
-
+# "Ruff Python linter"
 - repo: https://github.com/charliermarsh/ruff-pre-commit
   rev: 'v0.0.246'
   hooks:
@@ -62,15 +38,12 @@ repos:
       alias: "ruff-fix"
       stages: [ manual ]
       args: ["--fix"]
-- repo: https://github.com/pre-commit/mirrors-autopep8
-  rev: v2.0.2
-  hooks:
-  -   id: autopep8
-      args: ["-d"]
-  -   id: autopep8
-      alias: "autopep8-fix"
-      stages: [ manual ]
-      args: ["-i"]
+
+# "Black Python formatter"
+-   repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+    -   id: black
 
 # "Shell Syntax Check"
 # This is a wrapper for shellcheck as long as
@@ -98,12 +71,6 @@ repos:
       - --ignore
       - DL3008
 
-# "Helm chart linter"
-- repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.20
-  hooks:
-  - id: helmlint
-
 # Disable temporarily because gitlab-api can not be accessed.
 # "urllib.error.HTTPError: HTTP Error 401: Unauthorized"
 # ".gitlab-ci.yml linter"
@@ -115,11 +82,4 @@ repos:
 #     - '--server'
 #     - 'https://git.knut.univention.de'
 
-- repo: https://github.com/norwoodj/helm-docs
-  rev: v1.11.0
-  hooks:
-    - id: helm-docs
-      args:
-        - --chart-search-root=helm
-        - --template-files=README.md.gotmpl
 ...

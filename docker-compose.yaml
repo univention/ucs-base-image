@@ -7,3 +7,20 @@ services:
       - ".:/src"
     profiles:
       - docs
+
+  pre-commit:
+    profiles:
+      - "pre-commit"
+    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-pre-commit/upx-pre-commit:latest
+    volumes:
+      - type: bind
+        source: .
+        target: /code
+      - type: volume
+        # pre-commit installs dependencies, having them cached speeds things up
+        # a lot.
+        source: pre-commit-cache
+        target: /cache
+
+volumes:
+  pre-commit-cache:
