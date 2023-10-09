@@ -166,12 +166,19 @@ changelog:
   image:
     name: orhunp/git-cliff:latest
     entrypoint: [""]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+      when: always
   variables:
     GIT_STRATEGY: clone # clone entire repo instead of reusing workspace
     GIT_DEPTH: 0 # avoid shallow clone to give cliff all the info it needs
   stage: package
   script:
-    - git-cliff -r . > CHANGELOG.md
+    - |
+      git-cliff -c cliff.toml -o CHANGELOG.md
+      git add CHANGELOG.md
+      git commit -m "chore(release): $CI_COMMIT_TAG"
+      git push origin HEAD:$CI_COMMIT_REF_NAME
   artifacts:
     paths:
       - CHANGELOG.md
