@@ -53,7 +53,10 @@ RUN \
 # another package is removed.
 RUN echo 'Apt::AutoRemove::SuggestsImportant "false";' > "/work/etc/apt/apt.conf.d/docker-autoremove-suggests"
 
-RUN echo "deb ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list
+RUN \
+    echo "deb-src ${APT_REPOSITORY} ucs${UCS_VERSION} main" >> /work/etc/apt/sources.list && \
+    echo "deb ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list && \
+    echo "deb-src ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list
 
 RUN chroot /work apt-get -qq update
 RUN rm -rf /work/var/lib/apt/lists /work/var/cache/apt/archives
