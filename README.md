@@ -81,6 +81,13 @@ docker build --platform linux/amd64 --build-arg UCS_VERSION=502 -t wip .
 docker run -it --rm wip bash
 ```
 
+## Linting
+
+You can run the pre-commit checker as follows:
+```bash
+docker compose run --rm pre-commit
+```
+
 ## Contact
 
 - Team SouvAP Dev

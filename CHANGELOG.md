@@ -7,7 +7,24 @@ This changelog documents all notable changes to the `ucs-base` image.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.6.0 - 2023-09-21
+## 0.6.0 - 2023-10-09
+
+### Added
+
+- Add entrypoint script as a plugin point
+- Use bash instead of sh
+- Add GitLab MR/issue templates
+- Add compose target and instructions for running pre-commit
+
+### Documentation
+
+- Describe intended entrypoint usage
+
+### Fixed
+
+- Allow to export variables from entrypoint fragments
+
+## 0.5.1 - 2023-09-21
 
 ### Fixed
 
