@@ -1,7 +1,7 @@
 ARG UCS_BASE_IMAGE_TAG=latest
 ARG UCS_VERSION=505
 
-FROM gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ucs-base/ucs-base-dev-${UCS_VERSION}:${UCS_BASE_IMAGE_TAG}
+FROM gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-dev-${UCS_VERSION}:${UCS_BASE_IMAGE_TAG}
 
 RUN ucs-dev-add-branch.sh 5-0-5 \
     && apt-get update \
