@@ -8,30 +8,23 @@ across many of our `Dockerfile` files.
 
 The images are tagged according to the following pattern:
 
-```
-`ucs-base-{500,501,502,503,504,505}` based on
-`ucs-base-dev-{500,501,502,503,504,505}`
-`ucs-base-test-{510,520}-dev`
-```
+`ucs-base-{500,501,502,503,504,505,510,520}`
+> 50X based on `updates.software-univention.de` and 5X0 based on `updates-test.software-univention.de`
+`ucs-base-dev-{500,501,502,503,504,505,510,520}`
+> Based on `updates.knut.univention.de`
 
-All with `latest` and semantic-release `v0.6.0` or latest release.
+All with `latest` and semantic-release `v0.7.0`.
 
 Be aware that the base containers do include the errata releases as well by
 default. This means that your images will potentially change if they are built
 again in the future.
 
-## Status - Beta
-
-We try to apply the DRY (Don't repeat yourself) principle. It is tagged as
-"Beta" since we have only little experience so far with the approach.
-
 
 ## Provided images
 
 - `ucs-base-${UCS_VERSION}` allows to install published Univention packages.
-- `ucs-base-dev-${UCS_VERSION}` and `ucs-base-dev-${UCS_VERSION}-test` have in
-addition the key from `omar` installed and has a utility to add the sources of
-a branch from the `ucs` repository.
+- `ucs-base-dev-${UCS_VERSION}` have in addition the key from `omar` installed
+and has a utility to add the sources of a branch from the `ucs` repository.
 
 
 ## Example usage
@@ -92,3 +85,4 @@ docker compose run --rm pre-commit
 
 - Team SouvAP Dev
   - <johannes.bornhold.extern@univention.de>
+  - <conde-segovia.extern@univention.de>
