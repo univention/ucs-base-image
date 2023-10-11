@@ -77,7 +77,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN mkdir /entrypoint.d
 COPY entrypoint.sh /
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]
 
 
