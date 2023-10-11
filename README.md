@@ -13,7 +13,7 @@ The images are tagged according to the following pattern:
 `ucs-base-dev-{500,501,502,503,504,505,510,520}`
 > Based on `updates.knut.univention.de`
 
-All with `latest` and semantic-release `v0.7.0`.
+All with `latest` and semantic-release `v0.7.1`.
 
 Be aware that the base containers do include the errata releases as well by
 default. This means that your images will potentially change if they are built

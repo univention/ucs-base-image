@@ -168,7 +168,7 @@ build-ucs-base-dev-510:
   needs: []
   variables:
     UCS_VERSION: 510
-    APT_REPOSITORY: "http://updates-test.software-univention.de/"
+    APT_REPOSITORY: "https://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
     KANIKO_ARGS:
@@ -182,7 +182,7 @@ build-ucs-base-dev-520:
   needs: []
   variables:
     UCS_VERSION: 520
-    APT_REPOSITORY: "http://updates-test.software-univention.de/"
+    APT_REPOSITORY: "https://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
     KANIKO_ARGS:
