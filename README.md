@@ -30,7 +30,7 @@ and has a utility to add the sources of a branch from the `ucs` repository.
 ## Example usage
 
 ```Dockerfile
-FROM gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ucs-base/ucs-base-502:latest AS ucs-base
+FROM gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-502:latest AS ucs-base
 
 RUN apt-get update \
     && apt-get --assume-yes --verbose-versions --no-install-recommends install \
