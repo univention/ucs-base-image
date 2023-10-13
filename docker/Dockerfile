@@ -59,14 +59,14 @@ RUN \
     echo "deb-src ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list
 
 RUN chroot /work apt-get -qq update
-RUN rm -rf /work/var/lib/apt/lists /work/var/cache/apt/archives
+RUN chroot /work apt-get -q --assume-yes dist-upgrade
+RUN rm -rf /work/var/lib/apt/lists/* /work/var/cache/apt/archives
 RUN find /work/var '(' -name '*.deb' -o -name '*.log' -o -name '*.log.?z' -o -name '*-old' ')' -delete
 
 RUN rm -rf /work/dev; \
     rm -rf /work/sys; \
     rm -rf /work/proc; \
-    unlink /work/var/run; \
-    rm -rf /work/var/cache/apk/*
+    unlink /work/var/run;
 
 
 FROM scratch as final

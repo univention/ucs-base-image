@@ -2,13 +2,12 @@ ARG DOCKER_PROXY
 FROM ${DOCKER_PROXY}debian:bookworm-slim AS builder
 
 # major.minor.patch with no separators
-ARG UCS_VERSION="505"
+ARG UCS_VERSION="520"
 ARG APT_REPOSITORY="https://updates-test.software-univention.de/"
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 RUN apt-get -qq update && apt-get -q install --assume-yes --no-install-recommends debootstrap findutils
-RUN sed -e '/required=/s/ usr-is-merged//' -i /usr/share/debootstrap/scripts/debian-common
 
 #  hadliont ignore=DL3059
 RUN debootstrap \
@@ -58,15 +57,15 @@ RUN echo "deb-src ${APT_REPOSITORY} ucs${UCS_VERSION} main" >> /work/etc/apt/sou
     echo "deb-src ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list
 
 RUN chroot /work apt-get -qq update
+RUN chroot /work apt-get -q --assume-yes dist-upgrade
 RUN chroot /work apt-get -qq install usr-is-merged
-RUN rm -rf /work/var/lib/apt/lists /work/var/cache/apt/archives
+RUN rm -rf /work/var/lib/apt/lists/* /work/var/cache/apt/archives
 RUN find /work/var '(' -name '*.deb' -o -name '*.log' -o -name '*.log.?z' -o -name '*-old' ')' -delete
 
 RUN rm -rf /work/dev; \
     rm -rf /work/sys; \
     rm -rf /work/proc; \
-    unlink /work/var/run; \
-    rm -rf /work/var/cache/apk/*
+    unlink /work/var/run;
 
 
 FROM scratch as final

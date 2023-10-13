@@ -70,7 +70,7 @@ the container images:
 
 ```shell
 # Build example
-docker build --platform linux/amd64 --build-arg UCS_VERSION=502 -t wip .
+docker build --platform linux/amd64 --build-arg UCS_VERSION=505 -t ucs-base:local ./docker
 
 # Run a shell to inspect the result
 docker run -it --rm wip bash
