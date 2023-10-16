@@ -68,13 +68,13 @@ RUN rm -rf /work/dev; \
     rm -rf /work/proc; \
     unlink /work/var/run;
 
-
 FROM scratch as final
 COPY --from=builder /work /
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN mkdir /entrypoint.d
+RUN mkdir /entrypoint.d && \
+    ln -s /run /var/run
 COPY entrypoint.sh /
 
 ENTRYPOINT ["/entrypoint.sh"]
