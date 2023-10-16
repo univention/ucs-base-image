@@ -63,18 +63,20 @@ RUN chroot /work apt-get -q --assume-yes dist-upgrade
 RUN rm -rf /work/var/lib/apt/lists/* /work/var/cache/apt/archives
 RUN find /work/var '(' -name '*.deb' -o -name '*.log' -o -name '*.log.?z' -o -name '*-old' ')' -delete
 
+RUN ls -la /work/var /work/var/run
 RUN rm -rf /work/dev; \
     rm -rf /work/sys; \
-    rm -rf /work/proc; \
-    unlink /work/var/run;
+    rm -rf /work/proc;
+    # unlink /work/var/run;
 
 FROM scratch as final
 COPY --from=builder /work /
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN mkdir /entrypoint.d && \
-    ln -s /run /var/run
+RUN ls -la /var
+RUN mkdir /entrypoint.d
+    # ln -s /run /var/run
 COPY entrypoint.sh /
 
 ENTRYPOINT ["/entrypoint.sh"]

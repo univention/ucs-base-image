@@ -14,6 +14,12 @@ include:
       - "jobs/lint-pre-commit.yaml"
 
 
+.kaniko:
+  variables:
+    KANIKO_CACHE_ARGS: >-
+      --cache=false
+      --ignore-var-run=false
+
 build-ucs-base-50X-matrix:
   stage: build
   extends: .kaniko
@@ -31,7 +37,7 @@ build-ucs-base-50X-matrix:
     KANIKO_BUILD_CONTEXT: "docker"
     APT_REPOSITORY: "http://updates.software-univention.de/"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
-    KANIKO_ARGS:
+    KANIKO_ARGS: >-
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target final
@@ -80,7 +86,7 @@ build-ucs-base-dev-50X-matrix:
     APT_REPOSITORY: "http://updates.knut.univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
-    KANIKO_ARGS:
+    KANIKO_ARGS: >-
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
@@ -105,7 +111,7 @@ test-ucs-base-dev-usage-example:
     DOCKERFILE_PATH: "docker/dev.Dockerfile.usage-example"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-usage-example"
     KANIKO_CACHE_ARGS: ""
-    KANIKO_ARGS:
+    KANIKO_ARGS: >-
       --no-push
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
       --build-arg UCS_VERSION=${UCS_VERSION}
@@ -119,7 +125,7 @@ build-ucs-base-510:
     APT_REPOSITORY: "http://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
-    KANIKO_ARGS:
+    KANIKO_ARGS: >-
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target final
@@ -133,7 +139,7 @@ build-ucs-base-520:
     APT_REPOSITORY: "http://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
-    KANIKO_ARGS:
+    KANIKO_ARGS: >-
       --dockerfile usr-merge.Dockerfile
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
@@ -157,7 +163,7 @@ test-ucs-base-5X0-usage-example:
     DOCKERFILE_PATH: "docker/Dockerfile.usage-example"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-usage-example"
     KANIKO_CACHE_ARGS: ""
-    KANIKO_ARGS:
+    KANIKO_ARGS: >-
       --no-push
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
       --build-arg UCS_VERSION=${UCS_VERSION}
@@ -171,7 +177,7 @@ build-ucs-base-dev-510:
     APT_REPOSITORY: "https://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
-    KANIKO_ARGS:
+    KANIKO_ARGS: >-
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
@@ -185,7 +191,7 @@ build-ucs-base-dev-520:
     APT_REPOSITORY: "https://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
-    KANIKO_ARGS:
+    KANIKO_ARGS: >-
       --dockerfile usr-merge.Dockerfile
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
@@ -209,7 +215,7 @@ test-ucs-base-dev-5X0-usage-example:
     DOCKERFILE_PATH: "docker/dev.Dockerfile.usage-example"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-usage-example"
     KANIKO_CACHE_ARGS: ""
-    KANIKO_ARGS:
+    KANIKO_ARGS: >-
       --no-push
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
       --build-arg UCS_VERSION=${UCS_VERSION}
