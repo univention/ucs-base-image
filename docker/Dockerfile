@@ -65,16 +65,15 @@ RUN find /work/var '(' -name '*.deb' -o -name '*.log' -o -name '*.log.?z' -o -na
 
 RUN rm -rf /work/dev; \
     rm -rf /work/sys; \
-    rm -rf /work/proc; \
-    unlink /work/var/run;
+    rm -rf /work/proc;
 
 FROM scratch as final
 COPY --from=builder /work /
+
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN mkdir /entrypoint.d && \
-    ln -s /run /var/run
+RUN mkdir /entrypoint.d
 COPY entrypoint.sh /
 
 ENTRYPOINT ["/entrypoint.sh"]

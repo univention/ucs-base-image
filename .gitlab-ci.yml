@@ -13,10 +13,19 @@ include:
       - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
 
+.kaniko_no_sock:
+  extends: .kaniko
+  before_script:
+    # The GitLab runner mounts the Docker socket into /var/run.
+    # Kaniko either ignores /var/run (default), or the socket ends up in the tarball.
+    # We unmount the socket here, and later use `--ignore-var-run=false` to have a
+    # regular /var/run directory in the final image.
+    - "umount /var/run/docker.sock"
+    - "rm -rf /var/run"
 
 build-ucs-base-50X-matrix:
   stage: build
-  extends: .kaniko
+  extends: .kaniko_no_sock
   needs: []
   parallel:
     matrix:
@@ -32,6 +41,7 @@ build-ucs-base-50X-matrix:
     APT_REPOSITORY: "http://updates.software-univention.de/"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
     KANIKO_ARGS:
+      --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target final
@@ -39,7 +49,7 @@ build-ucs-base-50X-matrix:
 
 test-ucs-base-usage-example:
   stage: build
-  extends: .kaniko
+  extends: .kaniko_no_sock
   needs:
     - job: build-ucs-base-50X-matrix
       artifacts: true
@@ -65,7 +75,7 @@ test-ucs-base-usage-example:
 
 build-ucs-base-dev-50X-matrix:
   stage: build
-  extends: .kaniko
+  extends: .kaniko_no_sock
   needs: []
   parallel:
     matrix:
@@ -81,13 +91,14 @@ build-ucs-base-dev-50X-matrix:
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
     KANIKO_ARGS:
+      --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
 
 test-ucs-base-dev-usage-example:
   stage: build
-  extends: .kaniko
+  extends: .kaniko_no_sock
   needs:
     - job: build-ucs-base-dev-50X-matrix
       artifacts: true
@@ -112,7 +123,7 @@ test-ucs-base-dev-usage-example:
 
 build-ucs-base-510:
   stage: build
-  extends: .kaniko
+  extends: .kaniko_no_sock
   needs: []
   variables:
     UCS_VERSION: 510
@@ -120,13 +131,14 @@ build-ucs-base-510:
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
     KANIKO_ARGS:
+      --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target final
 
 build-ucs-base-520:
   stage: build
-  extends: .kaniko
+  extends: .kaniko_no_sock
   needs: []
   variables:
     UCS_VERSION: 520
@@ -135,13 +147,14 @@ build-ucs-base-520:
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
     KANIKO_ARGS:
       --dockerfile usr-merge.Dockerfile
+      --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target final
 
 test-ucs-base-5X0-usage-example:
   stage: build
-  extends: .kaniko
+  extends: .kaniko_no_sock
   needs:
     - job: build-ucs-base-510
       artifacts: true
@@ -164,7 +177,7 @@ test-ucs-base-5X0-usage-example:
 
 build-ucs-base-dev-510:
   stage: build
-  extends: .kaniko
+  extends: .kaniko_no_sock
   needs: []
   variables:
     UCS_VERSION: 510
@@ -172,13 +185,14 @@ build-ucs-base-dev-510:
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
     KANIKO_ARGS:
+      --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
 
 build-ucs-base-dev-520:
   stage: build
-  extends: .kaniko
+  extends: .kaniko_no_sock
   needs: []
   variables:
     UCS_VERSION: 520
@@ -187,13 +201,14 @@ build-ucs-base-dev-520:
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
     KANIKO_ARGS:
       --dockerfile usr-merge.Dockerfile
+      --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
 
 test-ucs-base-dev-5X0-usage-example:
   stage: build
-  extends: .kaniko
+  extends: .kaniko_no_sock
   needs:
     - job: build-ucs-base-dev-510
       artifacts: true
