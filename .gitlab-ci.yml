@@ -1,17 +1,22 @@
 ---
+variables:
+  EXTERNAL_REGISTRY: "docker.software-univention.de"
 
 include:
   - project: "univention/customers/dataport/upx/common-ci"
     ref: "v0.5.4"
     file:
-      # TODO: Sphinx docs inherits a stage definition from upstream,
-      # has to be included before our default stages to avoid trouble.
       - "jobs/sphinx-docs.yaml"
-      - "defaults/souvap-workflow.yaml"
       - "defaults/stages.yaml"
+      - "defaults/souvap-workflow.yaml"
+      - "templates/semantic-release-env.yaml"
       - "templates/kaniko.yaml"
+      - "templates/souvap.yaml"
       - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
+
+pre-semantic-release:
+  extends: ".pre-semantic-release"
 
 .kaniko_no_sock:
   extends: .kaniko
@@ -26,7 +31,9 @@ include:
 build-ucs-base-50X-matrix:
   stage: build
   extends: .kaniko_no_sock
-  needs: []
+  needs:
+    - job: "pre-semantic-release"
+      artifacts: true
   parallel:
     matrix:
       - UCS_VERSION:
@@ -40,18 +47,19 @@ build-ucs-base-50X-matrix:
     KANIKO_BUILD_CONTEXT: "docker"
     APT_REPOSITORY: "http://updates.software-univention.de/"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
-    KANIKO_ARGS:
-      --ignore-var-run=false
+    VERSION: "${RELEASE_VERSION}"
+    KANIKO_ARGS: --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target final
 
-
 test-ucs-base-usage-example:
-  stage: build
+  stage: test
   extends: .kaniko_no_sock
   needs:
     - job: build-ucs-base-50X-matrix
+      artifacts: true
+    - job: "pre-semantic-release"
       artifacts: true
   parallel:
     matrix:
@@ -72,11 +80,12 @@ test-ucs-base-usage-example:
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
       --build-arg UCS_VERSION=${UCS_VERSION}
 
-
 build-ucs-base-dev-50X-matrix:
   stage: build
   extends: .kaniko_no_sock
-  needs: []
+  needs:
+    - job: "pre-semantic-release"
+      artifacts: true
   parallel:
     matrix:
       - UCS_VERSION:
@@ -90,14 +99,14 @@ build-ucs-base-dev-50X-matrix:
     APT_REPOSITORY: "http://updates.knut.univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
-    KANIKO_ARGS:
-      --ignore-var-run=false
+    VERSION: "${RELEASE_VERSION}"
+    KANIKO_ARGS: --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
 
 test-ucs-base-dev-usage-example:
-  stage: build
+  stage: test
   extends: .kaniko_no_sock
   needs:
     - job: build-ucs-base-dev-50X-matrix
@@ -116,22 +125,23 @@ test-ucs-base-dev-usage-example:
     DOCKERFILE_PATH: "docker/dev.Dockerfile.usage-example"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-usage-example"
     KANIKO_CACHE_ARGS: ""
-    KANIKO_ARGS:
-      --no-push
+    KANIKO_ARGS: --no-push
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
       --build-arg UCS_VERSION=${UCS_VERSION}
 
 build-ucs-base-510:
   stage: build
   extends: .kaniko_no_sock
-  needs: []
+  needs:
+    - job: "pre-semantic-release"
+      artifacts: true
   variables:
     UCS_VERSION: 510
     APT_REPOSITORY: "http://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
-    KANIKO_ARGS:
-      --ignore-var-run=false
+    VERSION: "${RELEASE_VERSION}"
+    KANIKO_ARGS: --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target final
@@ -139,21 +149,23 @@ build-ucs-base-510:
 build-ucs-base-520:
   stage: build
   extends: .kaniko_no_sock
-  needs: []
+  needs:
+    - job: "pre-semantic-release"
+      artifacts: true
   variables:
     UCS_VERSION: 520
     APT_REPOSITORY: "http://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-${UCS_VERSION}"
-    KANIKO_ARGS:
-      --dockerfile usr-merge.Dockerfile
+    VERSION: "${RELEASE_VERSION}"
+    KANIKO_ARGS: --dockerfile usr-merge.Dockerfile
       --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target final
 
 test-ucs-base-5X0-usage-example:
-  stage: build
+  stage: test
   extends: .kaniko_no_sock
   needs:
     - job: build-ucs-base-510
@@ -170,22 +182,23 @@ test-ucs-base-5X0-usage-example:
     DOCKERFILE_PATH: "docker/Dockerfile.usage-example"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-usage-example"
     KANIKO_CACHE_ARGS: ""
-    KANIKO_ARGS:
-      --no-push
+    KANIKO_ARGS: --no-push
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
       --build-arg UCS_VERSION=${UCS_VERSION}
 
 build-ucs-base-dev-510:
   stage: build
   extends: .kaniko_no_sock
-  needs: []
+  needs:
+    - job: "pre-semantic-release"
+      artifacts: true
   variables:
     UCS_VERSION: 510
     APT_REPOSITORY: "https://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
-    KANIKO_ARGS:
-      --ignore-var-run=false
+    VERSION: "${RELEASE_VERSION}"
+    KANIKO_ARGS: --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
@@ -193,21 +206,23 @@ build-ucs-base-dev-510:
 build-ucs-base-dev-520:
   stage: build
   extends: .kaniko_no_sock
-  needs: []
+  needs:
+    - job: "pre-semantic-release"
+      artifacts: true
   variables:
     UCS_VERSION: 520
     APT_REPOSITORY: "https://updates-test.software-univention.de/"
     KANIKO_BUILD_CONTEXT: "docker"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
-    KANIKO_ARGS:
-      --dockerfile usr-merge.Dockerfile
+    VERSION: "${RELEASE_VERSION}"
+    KANIKO_ARGS: --dockerfile usr-merge.Dockerfile
       --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target dev
 
 test-ucs-base-dev-5X0-usage-example:
-  stage: build
+  stage: test
   extends: .kaniko_no_sock
   needs:
     - job: build-ucs-base-dev-510
@@ -224,35 +239,53 @@ test-ucs-base-dev-5X0-usage-example:
     DOCKERFILE_PATH: "docker/dev.Dockerfile.usage-example"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/ucs-base-usage-example"
     KANIKO_CACHE_ARGS: ""
-    KANIKO_ARGS:
-      --no-push
+    KANIKO_ARGS: --no-push
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
       --build-arg UCS_VERSION=${UCS_VERSION}
 
-changelog:
-  image:
-    name: orhunp/git-cliff:latest
-    entrypoint: [""]
-  variables:
-    GIT_STRATEGY: clone # clone entire repo instead of reusing workspace
-    GIT_DEPTH: 0 # avoid shallow clone to give cliff all the info it needs
-  stage: package
+mirror-release:
+  stage: publish
+  image: "gitregistry.knut.univention.de/univention/customers/dataport/upx/common-ci/semantic-release-patched:0.6.0"
+  needs:
+    - job: "pre-semantic-release"
+      artifacts: true
+    - job: test-ucs-base-usage-example
+      artifacts: false
+    - job: test-ucs-base-5X0-usage-example
+      artifacts: false
+  parallel:
+    matrix:
+      - UCS_VERSION:
+          - 505
+          - 520
   script:
-    - git-cliff -r . > CHANGELOG.md
-  artifacts:
-    paths:
-      - CHANGELOG.md
+    - |
+      set -eux
 
-release:
-  # TODO: Make a base image for this tool
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:18-buster-slim"
-  stage: package
-  before_script:
-    - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates
-    - npm install -g semantic-release @semantic-release/gitlab @semantic-release/changelog conventional-changelog-conventionalcommits
-  script:
-    - semantic-release
+      # check if RELEASE_VERSION is a release version, not a pre-release version
+      MATCH="^[0-9]+\.[0-9]+\.[0-9]+$";
+      if [[ "${RELEASE_VERSION}" =~ ${MATCH} ]]; then
+        echo "Release version '${RELEASE_VERSION}' detected, mirroring '$CI_REGISTRY_IMAGE/ucs-base-$UCS_VERSION:$RELEASE_VERSION' to '$PUBLIC_DOCKER_REGISTRY/ucs-base-$UCS_VERSION:$RELEASE_VERSION'"
+      else
+        echo "No valid release version detected (RELEASE_VERSION is '${RELEASE_VERSION}'), skipping mirroring"
+        exit 0
+      fi
+
+      chmod 0400 "${DOCKER_PROXY_MACHINE_SSH_KEY}"
+      export SSH_CMD="ssh -i ${DOCKER_PROXY_MACHINE_SSH_KEY} -o UserKnownHostsFile=\"${DOCKER_PROXY_MACHINE_SSH_PUBLIC_KEY}\""
+
+      ${SSH_CMD} "${DOCKER_PROXY_USER}"@"${DOCKER_PROXY_MACHINE}" /usr/bin/docker \
+        pull \
+        "${CI_REGISTRY_IMAGE}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
+
+      ${SSH_CMD} "${DOCKER_PROXY_USER}"@"${DOCKER_PROXY_MACHINE}" /usr/bin/docker \
+        tag \
+        "${CI_REGISTRY_IMAGE}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}" \
+        "${PUBLIC_DOCKER_REGISTRY}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
+
+      ${SSH_CMD} "${DOCKER_PROXY_USER}"@"${DOCKER_PROXY_MACHINE}" /usr/bin/docker \
+        push \
+        "${PUBLIC_DOCKER_REGISTRY}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 ...
