@@ -229,6 +229,33 @@ test-ucs-base-dev-5X0-usage-example:
       --build-arg UCS_BASE_IMAGE_TAG=${BUILD_VERSION}
       --build-arg UCS_VERSION=${UCS_VERSION}
 
+container-scanning:
+  stage: build
+  needs:
+    - job: build-ucs-base-510
+      artifacts: true
+    - job: build-ucs-base-520
+      artifacts: true
+    - job: build-ucs-base-dev-510
+      artifacts: true
+    - job: build-ucs-base-dev-520
+      artifacts: true
+  script:
+    - 'echo "Maintainability: Security monitoring"'
+    - >
+      trivy image
+      --exit-code 0
+      --format json
+      -o gl-codeclimate.json
+      "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
+    - >
+      trivy image
+      --exit-code 0
+      --format json
+      -o gl-codeclimate.json
+      "$CI_REGISTRY_IMAGE/ucs-base-dev-${UCS_VERSION}"
+
+
 changelog:
   image:
     name: orhunp/git-cliff:latest
