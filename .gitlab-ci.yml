@@ -274,16 +274,16 @@ mirror-release:
       chmod 0400 "${DOCKER_PROXY_MACHINE_SSH_KEY}"
       export SSH_CMD="ssh -i ${DOCKER_PROXY_MACHINE_SSH_KEY} -o UserKnownHostsFile=\"${DOCKER_PROXY_MACHINE_SSH_PUBLIC_KEY}\""
 
-      ${SSH_CMD} "${DOCKER_PROXY_USER}"@"${DOCKER_PROXY_MACHINE}" /usr/bin/docker \
+      ${SSH_CMD} "${DOCKER_PROXY_USER}"@"${DOCKER_PROXY_MACHINE}" sudo /usr/bin/docker \
         pull \
         "${CI_REGISTRY_IMAGE}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
 
-      ${SSH_CMD} "${DOCKER_PROXY_USER}"@"${DOCKER_PROXY_MACHINE}" /usr/bin/docker \
+      ${SSH_CMD} "${DOCKER_PROXY_USER}"@"${DOCKER_PROXY_MACHINE}" sudo /usr/bin/docker \
         tag \
         "${CI_REGISTRY_IMAGE}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}" \
         "${PUBLIC_DOCKER_REGISTRY}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
 
-      ${SSH_CMD} "${DOCKER_PROXY_USER}"@"${DOCKER_PROXY_MACHINE}" /usr/bin/docker \
+      ${SSH_CMD} "${DOCKER_PROXY_USER}"@"${DOCKER_PROXY_MACHINE}" sudo /usr/bin/docker \
         push \
         "${PUBLIC_DOCKER_REGISTRY}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
   rules:
