@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.8.1...v0.9.0) (2023-11-17)
+
+
+### Features
+
+* **ci:** update .releaserc, added sbom generation, signing and scanning ([788e063](https://git.knut.univention.de/univention/components/ucs-base-image/commit/788e06339b2ccb6fa118a30ece55755d852652b4))
 
 This changelog documents all notable changes to the `ucs-base` image.
 
