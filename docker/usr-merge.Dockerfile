@@ -92,6 +92,7 @@ RUN chroot /work apt-get -q --assume-yes dist-upgrade
 RUN chroot /work apt-get -qq install usr-is-merged
 RUN rm -rf /work/var/lib/apt/lists/* /work/var/cache/apt/archives
 RUN find /work/var '(' -name '*.deb' -o -name '*.log' -o -name '*.log.?z' -o -name '*-old' ')' -delete
+RUN chroot /work dpkg --purge --force-remove-essential --force-depends perl-base
 
 RUN rm -rf /work/dev; \
     rm -rf /work/sys; \
