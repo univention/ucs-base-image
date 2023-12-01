@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.9.0...v0.9.1) (2023-12-01)
+
+
+### Bug Fixes
+
+* **ci:** add missing import job/container-build ([f52eea3](https://git.knut.univention.de/univention/components/ucs-base-image/commit/f52eea3caf4c73e674bbbda78ec2272cb8c2fab7))
+
 ## [0.9.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.8.1...v0.9.0) (2023-11-17)
 
 
