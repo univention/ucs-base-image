@@ -5,5 +5,5 @@
 
 The following example shows how to use ``ucs-base``:
 
-.. literalinclude:: ../docker/Dockerfile.usage-example
+.. literalinclude:: ../docker/ucs-base/Dockerfile.usage-example
    :language: Dockerfile
