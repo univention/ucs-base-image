@@ -16,14 +16,14 @@ across many of our `Dockerfile` files.
 
 The images are tagged according to the following pattern:
 
-* `ucs-base-{500,501,502,503,504,505,510,520}`
+* `ucs-base-{500,501,502,503,504,505,506,510,520}`
 > * 50X based on `updates.software-univention.de`
 > * 5X0 based on `updates-test.software-univention.de`
-* `ucs-base-dev-{500,501,502,503,504,505,510,520}`
+* `ucs-base-dev-{500,501,502,503,504,505,506,510,520}`
 > * 50X based on `updates.knut.univention.de`
 > * 5X0 based on `updates-test.software-univention.de`
 
-All with `latest` and semantic-release `v0.7.2`.
+All with `latest` and semantic-release `v0.10.0`.
 
 Be aware that the base containers do include the errata releases as well by
 default. This means that your images will potentially change if they are built

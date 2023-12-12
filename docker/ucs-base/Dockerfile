@@ -33,7 +33,7 @@ ARG DOCKER_PROXY
 FROM ${DOCKER_PROXY}debian:bookworm-slim AS builder
 
 # major.minor.patch with no separators
-ARG UCS_VERSION="505"
+ARG UCS_VERSION="506"
 ARG APT_REPOSITORY="https://updates.software-univention.de/"
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]

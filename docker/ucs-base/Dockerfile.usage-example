@@ -1,5 +1,5 @@
 ARG UCS_BASE_IMAGE_TAG=latest
-ARG UCS_VERSION=505
+ARG UCS_VERSION=506
 
 FROM gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-${UCS_VERSION}:${UCS_BASE_IMAGE_TAG}
 

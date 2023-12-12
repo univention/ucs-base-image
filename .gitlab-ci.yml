@@ -26,6 +26,7 @@ variables:
       - 503
       - 504
       - 505
+      - 506
       - 510
       - 520
 
@@ -47,6 +48,7 @@ container-build:
           - 503
           - 504
           - 505
+          - 506
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final"
       - IMAGE_BASENAME: "ucs-base"
@@ -68,6 +70,7 @@ container-build:
           - 503
           - 504
           - 505
+          - 506
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "dev"
       - IMAGE_BASENAME: "ucs-base-dev"
@@ -104,6 +107,7 @@ test-ucs-base-usage-example:
           - 503
           - 504
           - 505
+          - 506
           - 510
           - 520
       - IMAGE_BASENAME: "ucs-base-dev"
@@ -115,6 +119,7 @@ test-ucs-base-usage-example:
           - 503
           - 504
           - 505
+          - 506
           - 510
           - 520
   variables:
@@ -150,7 +155,7 @@ mirror-release:
   parallel:
     matrix:
       - UCS_VERSION:
-          - 505
+          - 506
           - 520
   script:
     - |
@@ -177,3 +182,5 @@ mirror-release:
         "${PUBLIC_DOCKER_REGISTRY}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+...
