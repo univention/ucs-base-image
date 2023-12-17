@@ -1,4 +1,5 @@
 ---
+
 include:
   - project: "univention/customers/dataport/upx/common-ci"
     ref: "v1.12.0"
@@ -20,11 +21,6 @@ variables:
   - IMAGE_BASENAME:
       - "ucs-base"
     UCS_VERSION:
-      - 500
-      - 501
-      - 502
-      - 503
-      - 504
       - 505
       - 506
       - 510
@@ -42,11 +38,6 @@ container-build:
     matrix:
       - IMAGE_BASENAME: "ucs-base"
         UCS_VERSION:
-          - 500
-          - 501
-          - 502
-          - 503
-          - 504
           - 505
           - 506
         APT_REPOSITORY: "http://updates.software-univention.de/"
@@ -64,11 +55,6 @@ container-build:
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
       - IMAGE_BASENAME: "ucs-base-dev"
         UCS_VERSION:
-          - 500
-          - 501
-          - 502
-          - 503
-          - 504
           - 505
           - 506
         APT_REPOSITORY: "http://updates.software-univention.de/"
@@ -93,19 +79,14 @@ container-build:
       --target ${TARGET}
 
 test-ucs-base-usage-example:
-  stage: test
-  extends: .kaniko
+  stage: "test"
+  extends: ".kaniko"
   cache: null
   parallel:
     matrix:
       - IMAGE_BASENAME: "ucs-base"
         DOCKERFILE_PATH: "Dockerfile.usage-example"
         UCS_VERSION:
-          - 500
-          - 501
-          - 502
-          - 503
-          - 504
           - 505
           - 506
           - 510
@@ -113,11 +94,6 @@ test-ucs-base-usage-example:
       - IMAGE_BASENAME: "ucs-base-dev"
         DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
         UCS_VERSION:
-          - 500
-          - 501
-          - 502
-          - 503
-          - 504
           - 505
           - 506
           - 510
@@ -150,7 +126,7 @@ container-security-scan:
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
 
 mirror-release:
-  stage: publish
+  stage: "publish"
   image: "gitregistry.knut.univention.de/univention/customers/dataport/upx/common-ci/semantic-release-patched:0.11.0"
   parallel:
     matrix:
@@ -181,6 +157,6 @@ mirror-release:
         push \
         "${PUBLIC_DOCKER_REGISTRY}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
 
 ...
