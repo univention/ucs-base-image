@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.10.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.9.1...v0.10.0) (2023-12-18)
+
+
+### Features
+
+* **ucs-base:** add UCS 5.0-6 ([f0084b6](https://git.knut.univention.de/univention/components/ucs-base-image/commit/f0084b656ea0db129b64396140656223f8380b86))
+
+
+### Bug Fixes
+
+* **ci:** bump common-ci include from v1.9.9 to v1.12.0 ([d1e9e3e](https://git.knut.univention.de/univention/components/ucs-base-image/commit/d1e9e3eb2a77335539e5b456836185cbc079679f))
+
 ## [0.9.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.9.0...v0.9.1) (2023-12-01)
 
 
