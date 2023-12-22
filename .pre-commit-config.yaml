@@ -1,11 +1,14 @@
 ---
 
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2023 Univention GmbH
+
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: "v4.5.0"
     hooks:
       # "Check for added large files"
       - id: check-added-large-files
@@ -24,24 +27,28 @@ repos:
 
 # "Commit messages"
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v2.4.0
+    rev: "v3.0.0"
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
 
 # "Ruff Python linter"
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.0.246'
+  - repo: "https://github.com/charliermarsh/ruff-pre-commit"
+    rev: "v0.1.9"
     hooks:
-      - id: ruff
-      - id: ruff
+      - id: "ruff"
+        alias: "ruff-check"
+        name: "ruff check"
+        args: ["--ignore=TD002,TD003,FIX002"]
+      - id: "ruff"
         alias: "ruff-fix"
-        stages: [manual]
-        args: ["--fix"]
+        name: "ruff fix"
+        stages: ["manual"]
+        args: ["--fix", "--ignore=TD002,TD003,FIX002"]
 
 # "Black Python formatter"
   - repo: https://github.com/psf/black
-    rev: 23.7.0
+    rev: "23.12.0"
     hooks:
       - id: black
 
@@ -71,28 +78,10 @@ repos:
           - --ignore
           - DL3008
 
-
-  - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.4
+  - repo: "https://git.knut.univention.de/univention/dist/pre-commit-hooks/addlicense"
+    rev: "v1.0.1"
     hooks:
-      - id: insert-license
-        name: insert license in docker files
-        description: Insert license in Docker files.
-        files: docker\/.*Dockerfile$
-        args:
-          - --license-filepath
-          - license_header.txt
-          - --use-current-year
-          - --detect-license-in-X-top-lines=35
-      - id: insert-license
-        name: insert license in bash files
-        description: Insert license in Bash files.
-        files: docker\/.*.sh$
-        exclude: docker/entrypoint.sh
-        args:
-          - --license-filepath
-          - license_header.txt
-          - --use-current-year
-          - --detect-license-in-X-top-lines=35
+      - id: "addlicense"
+        name: "Check or add license headers to files"
 
 ...
