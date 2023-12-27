@@ -4,46 +4,46 @@
 # See https://pre-commit.com/hooks.html for more hooks
 
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.4.0
-  hooks:
-  # "Check for added large files"
-  - id: check-added-large-files
-  # "Check for merge conflicts"
-  - id: check-merge-conflict
-  # "Check Yaml"
-  - id: check-yaml
-    args:
-      # Allow custom tags like Gitlab's "!reference" tag.
-      - --unsafe
-    exclude: ^helm/.+/templates/
-  # "Fix python encoding pragma"
-  # - id: fix-encoding-pragma
-  # "Trim Trailing Whitespace"
-  - id: trailing-whitespace
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      # "Check for added large files"
+      - id: check-added-large-files
+      # "Check for merge conflicts"
+      - id: check-merge-conflict
+      # "Check Yaml"
+      - id: check-yaml
+        args:
+          # Allow custom tags like Gitlab's "!reference" tag.
+          - --unsafe
+        exclude: ^helm/.+/templates/
+      # "Fix python encoding pragma"
+      # - id: fix-encoding-pragma
+      # "Trim Trailing Whitespace"
+      - id: trailing-whitespace
 
 # "Commit messages"
-- repo: https://github.com/compilerla/conventional-pre-commit
-  rev: v2.4.0
-  hooks:
-    - id: conventional-pre-commit
-      stages: [commit-msg]
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v2.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
 
 # "Ruff Python linter"
-- repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: 'v0.0.246'
-  hooks:
-    - id: ruff
-    - id: ruff
-      alias: "ruff-fix"
-      stages: [ manual ]
-      args: ["--fix"]
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: 'v0.0.246'
+    hooks:
+      - id: ruff
+      - id: ruff
+        alias: "ruff-fix"
+        stages: [manual]
+        args: ["--fix"]
 
 # "Black Python formatter"
--   repo: https://github.com/psf/black
+  - repo: https://github.com/psf/black
     rev: 23.7.0
     hooks:
-    -   id: black
+      - id: black
 
 # "Shell Syntax Check"
 # This is a wrapper for shellcheck as long as
@@ -55,44 +55,44 @@ repos:
 #  - id: shell-lint
 
 # "docker-compose.yaml linter"
-- repo: https://gitlab.com/univention/pre-commit-hooks/docker-compose-check
-  rev: 7702a8801a158b8595569dd29e2dd655d8a08310
-  hooks:
-  - id: docker-compose-check
+  - repo: https://gitlab.com/univention/pre-commit-hooks/docker-compose-check
+    rev: 7702a8801a158b8595569dd29e2dd655d8a08310
+    hooks:
+      - id: docker-compose-check
 
 # "Dockerfile linter"
-- repo: https://gitlab.com/univention/pre-commit-hooks/docker-pre-commit
-  rev: v2.0.0
-  hooks:
-  - id: hadolint-system
-    args:
-      - --ignore
-      - DL3059
-      - --ignore
-      - DL3008
+  - repo: https://gitlab.com/univention/pre-commit-hooks/docker-pre-commit
+    rev: v2.0.0
+    hooks:
+      - id: hadolint-system
+        args:
+          - --ignore
+          - DL3059
+          - --ignore
+          - DL3008
 
 
-- repo: https://github.com/Lucas-C/pre-commit-hooks
-  rev: v1.5.4
-  hooks:
-    - id: insert-license
-      name: insert license in docker files
-      description: Insert license in Docker files.
-      files: docker\/.*Dockerfile$
-      args:
-        - --license-filepath
-        - license_header.txt
-        - --use-current-year
-        - --detect-license-in-X-top-lines=35
-    - id: insert-license
-      name: insert license in bash files
-      description: Insert license in Bash files.
-      files: docker\/.*.sh$
-      exclude: docker/entrypoint.sh
-      args:
-        - --license-filepath
-        - license_header.txt
-        - --use-current-year
-        - --detect-license-in-X-top-lines=35
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.5.4
+    hooks:
+      - id: insert-license
+        name: insert license in docker files
+        description: Insert license in Docker files.
+        files: docker\/.*Dockerfile$
+        args:
+          - --license-filepath
+          - license_header.txt
+          - --use-current-year
+          - --detect-license-in-X-top-lines=35
+      - id: insert-license
+        name: insert license in bash files
+        description: Insert license in Bash files.
+        files: docker\/.*.sh$
+        exclude: docker/entrypoint.sh
+        args:
+          - --license-filepath
+          - license_header.txt
+          - --use-current-year
+          - --detect-license-in-X-top-lines=35
 
 ...
