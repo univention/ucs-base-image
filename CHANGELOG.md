@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.10.0...v0.10.1) (2023-12-28)
+
+
+### Bug Fixes
+
+* **licensing/ci:** add spdx license headers, add license header checking pre-commit ([b5fc286](https://git.knut.univention.de/univention/components/ucs-base-image/commit/b5fc286aac62f3804a734795797153ed4f5ffeae))
+
 ## [0.10.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.9.1...v0.10.0) (2023-12-18)
 
 
