@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.2](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.10.1...v0.10.2) (2024-01-15)
+
+
+### Bug Fixes
+
+* **deps:** add renovate.json ([56183dd](https://git.knut.univention.de/univention/components/ucs-base-image/commit/56183dde70f00108a3862aaadf396b0af23ecefa))
+
 ## [0.10.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.10.0...v0.10.1) (2023-12-28)
 
 
