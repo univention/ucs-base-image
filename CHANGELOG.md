@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.10.2...v0.11.0) (2024-01-15)
+
+
+### Features
+
+* **ci:** add jobs for scheduled update check ([6cdd088](https://git.knut.univention.de/univention/components/ucs-base-image/commit/6cdd088f718a0ebedb0d309aa06f0c8ad9992273))
+
 ## [0.10.2](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.10.1...v0.10.2) (2024-01-15)
 
 
