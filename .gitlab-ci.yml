@@ -5,7 +5,7 @@
 
 include:
   - project: "univention/customers/dataport/upx/common-ci"
-    ref: "v1.16.0"
+    ref: "v1.20.0"
     file:
       - "jobs/sphinx-docs.yaml"
       - "defaults/stages.yaml"
@@ -131,7 +131,7 @@ container-security-scan:
 
 mirror-release:
   stage: "publish"
-  image: "gitregistry.knut.univention.de/univention/customers/dataport/upx/common-ci/semantic-release-patched:0.11.0"
+  image: "gitregistry.knut.univention.de/univention/customers/dataport/upx/common-ci/semantic-release-patched:1.20.0"
   parallel:
     matrix:
       - UCS_VERSION:
