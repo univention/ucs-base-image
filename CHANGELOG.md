@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.11.0...v0.11.1) (2024-02-14)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([2193b01](https://git.knut.univention.de/univention/components/ucs-base-image/commit/2193b016c6aa93cc227c8430a38e4ba00978de08))
+
 ## [0.11.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.10.2...v0.11.0) (2024-01-15)
 
 
