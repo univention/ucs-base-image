@@ -131,7 +131,10 @@ container-security-scan:
 
 mirror-release:
   stage: "publish"
-  image: "gitregistry.knut.univention.de/univention/customers/dataport/upx/common-ci/semantic-release-patched:1.20.1"
+  image: "${RUNNER_REGISTRY_IMAGE}:${RUNNER_IMAGE_TAG}"
+  variables:
+    RUNNER_REGISTRY_IMAGE: "gitregistry.knut.univention.de/univention/dist/ci-images/gitlab-utils/gitlab-utils"
+    RUNNER_IMAGE_TAG: "1.19.1@sha256:11fdcf823f7e17e00e8434a094093297c5dd0b7bc4cbe93ef100b12b21e81ab6"
   parallel:
     matrix:
       - UCS_VERSION:
