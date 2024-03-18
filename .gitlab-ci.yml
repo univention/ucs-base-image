@@ -25,8 +25,8 @@ variables:
   - IMAGE_BASENAME:
       - "ucs-base"
     UCS_VERSION:
-      - 505
       - 506
+      - 507
       - 510
       - 520
 
@@ -42,8 +42,8 @@ container-build:
     matrix:
       - IMAGE_BASENAME: "ucs-base"
         UCS_VERSION:
-          - 505
           - 506
+          - 507
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final"
       - IMAGE_BASENAME: "ucs-base"
@@ -59,8 +59,8 @@ container-build:
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
       - IMAGE_BASENAME: "ucs-base-dev"
         UCS_VERSION:
-          - 505
           - 506
+          - 507
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "dev"
       - IMAGE_BASENAME: "ucs-base-dev"
@@ -91,15 +91,15 @@ test-ucs-base-usage-example:
       - IMAGE_BASENAME: "ucs-base"
         DOCKERFILE_PATH: "Dockerfile.usage-example"
         UCS_VERSION:
-          - 505
           - 506
+          - 507
           - 510
           - 520
       - IMAGE_BASENAME: "ucs-base-dev"
         DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
         UCS_VERSION:
-          - 505
           - 506
+          - 507
           - 510
           - 520
   variables:
@@ -138,7 +138,7 @@ mirror-release:
   parallel:
     matrix:
       - UCS_VERSION:
-          - 506
+          - 507
           - 520
   script:
     - |
