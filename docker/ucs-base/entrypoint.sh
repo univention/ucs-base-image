@@ -63,7 +63,7 @@ set -e
 
 entrypoint_log() {
     if [ -z "${ENTRYPOINT_QUIET_LOGS:-}" ]; then
-        echo "$@"
+        >&2 echo "$@"
     fi
 }
 
