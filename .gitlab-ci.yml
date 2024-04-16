@@ -134,7 +134,7 @@ mirror-release:
   image: "${RUNNER_REGISTRY_IMAGE}:${RUNNER_IMAGE_TAG}"
   variables:
     RUNNER_REGISTRY_IMAGE: "gitregistry.knut.univention.de/univention/dist/ci-images/gitlab-utils/gitlab-utils"
-    RUNNER_IMAGE_TAG: "1.19.1@sha256:11fdcf823f7e17e00e8434a094093297c5dd0b7bc4cbe93ef100b12b21e81ab6"
+    RUNNER_IMAGE_TAG: "1.20.0@sha256:3c59a3dfa14d45ca00066f16c269378ca5e7f7da14d7a2a58edbc9f38ae303e5"
   parallel:
     matrix:
       - UCS_VERSION:
