@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.11.3](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.11.2...v0.11.3) (2024-04-17)
+
+
+### Bug Fixes
+
+* **ci:** add ucs 5.0-7 and remove 5.0-5 ([c308bd9](https://git.knut.univention.de/univention/components/ucs-base-image/commit/c308bd97d12eaa9eb98fb222118a69605fad925d))
+* Output logs to stderr instead of stdout ([2520c15](https://git.knut.univention.de/univention/components/ucs-base-image/commit/2520c15e9e9f96d003e000f3a49bb4818fca498c))
+* Use updated utility container version 1.20.0 ([5a94af3](https://git.knut.univention.de/univention/components/ucs-base-image/commit/5a94af3388668554e9ff6846971c35656f46202b))
+
 ## [0.11.2](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.11.1...v0.11.2) (2024-02-16)
 
 
