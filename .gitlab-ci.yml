@@ -45,17 +45,17 @@ container-build:
           - 506
           - 507
         APT_REPOSITORY: "http://updates.software-univention.de/"
-        TARGET: "final"
+        TARGET: "final-with-packages"
       - IMAGE_BASENAME: "ucs-base"
         UCS_VERSION:
           - 510
         APT_REPOSITORY: "http://updates-test.software-univention.de/"
-        TARGET: "final"
+        TARGET: "final-with-packages"
       - IMAGE_BASENAME: "ucs-base"
         UCS_VERSION:
           - 520
         APT_REPOSITORY: "http://updates-test.software-univention.de/"
-        TARGET: "final"
+        TARGET: "final-with-packages"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
       - IMAGE_BASENAME: "ucs-base-dev"
         UCS_VERSION:
@@ -81,6 +81,8 @@ container-build:
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target ${TARGET}
+
+
 
 test-ucs-base-usage-example:
   stage: "test"
