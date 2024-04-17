@@ -109,6 +109,10 @@ ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]
 
 
+FROM final as final-with-packages
+RUN apt-get update
+
+
 FROM final as dev
 
 ARG APT_KEY_URL_DEV=http://omar.knut.univention.de/build2/git/key.pub
