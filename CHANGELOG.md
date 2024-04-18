@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.11.3...v0.12.0) (2024-04-18)
+
+
+### Features
+
+* Add stage "final-with-packages" into Dockerfile ([e81a379](https://git.knut.univention.de/univention/components/ucs-base-image/commit/e81a3795069cb15c554ed78711928d381066e3f2))
+
 ## [0.11.3](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.11.2...v0.11.3) (2024-04-17)
 
 
