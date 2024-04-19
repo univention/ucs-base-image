@@ -25,9 +25,22 @@ The images are tagged according to the following pattern:
 
 All with `latest` and semantic-release `v0.10.0`.
 
+
+## Errata release handling
+
 Be aware that the base containers do include the errata releases as well by
 default. This means that your images will potentially change if they are built
 again in the future.
+
+To mitigate this we do additionally tag the `50X` images with a date based
+suffix based on the build date and keep the packages included in the image. This
+way the downstream images can rely on `apt-get install` installing precisely the
+same packages again as long as there is no usage of `apt-get update`.
+
+Example tags:
+
+- `ucs-base-506:0.12.0-build-2024-04-18`
+- `ucs-base-507:0.12.0-build-2024-04-18`
 
 
 ## Provided images
