@@ -16,7 +16,6 @@ include:
       - "jobs/container-build.yaml"
       - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
-      - "jobs/check-debian-updates.yaml"
 
 variables:
   EXTERNAL_REGISTRY: "docker.software-univention.de"
@@ -204,11 +203,5 @@ mirror-release:
         "${PUBLIC_DOCKER_REGISTRY}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
-
-check-debian-updates:
-  parallel:
-    matrix: *post-build-matrix
-  variables:
-    TARGET_IMAGE: "${CI_REGISTRY_IMAGE}/${IMAGE_BASENAME}-${UCS_VERSION}:latest"
 
 ...
