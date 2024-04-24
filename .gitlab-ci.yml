@@ -5,13 +5,13 @@
 
 include:
   - project: "univention/customers/dataport/upx/common-ci"
-    ref: "v1.20.1"
+    ref: "v1.29.0"
     file:
       - "jobs/sphinx-docs.yaml"
       - "defaults/stages.yaml"
-      - "defaults/souvap-workflow.yaml"
+      - "defaults/nubus-workflow.yaml"
       - "templates/kaniko.yaml"
-      - "templates/souvap.yaml"
+      - "templates/harbor.yaml"
       - "jobs/semantic-release-env.yaml"
       - "jobs/container-build.yaml"
       - "jobs/lint-commit-messages.yaml"
