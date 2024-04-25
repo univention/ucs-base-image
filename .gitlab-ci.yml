@@ -14,6 +14,7 @@ include:
       - "templates/harbor.yaml"
       - "jobs/semantic-release-env.yaml"
       - "jobs/container-build.yaml"
+      - "jobs/container-build-external.yaml"
       - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
 
