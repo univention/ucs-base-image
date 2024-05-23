@@ -5,7 +5,7 @@
 
 include:
   - project: "univention/customers/dataport/upx/common-ci"
-    ref: "v1.29.0"
+    ref: "v1.30.3"
     file:
       - "jobs/sphinx-docs.yaml"
       - "defaults/stages.yaml"
@@ -161,12 +161,6 @@ container-sign:
   variables:
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
 
-container-security-scan:
-  parallel:
-    matrix: *post-build-matrix
-  variables:
-    IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
-
 mirror-release:
   stage: "publish"
   image: "${RUNNER_REGISTRY_IMAGE}:${RUNNER_IMAGE_TAG}"
@@ -203,5 +197,9 @@ mirror-release:
         "${PUBLIC_DOCKER_REGISTRY}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+
+package-helm-charts:
+  variables:
+    SKIP_UPDATE_HELM_VALUES: "true"
 
 ...
