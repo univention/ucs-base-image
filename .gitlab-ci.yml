@@ -192,8 +192,4 @@ mirror-release:
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
 
-package-helm-charts:
-  variables:
-    SKIP_UPDATE_HELM_VALUES: "true"
-
 ...
