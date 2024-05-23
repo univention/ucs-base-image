@@ -149,7 +149,7 @@ test-ucs-base-usage-example:
       --build-arg UCS_BASE_IMAGE_TAG=${RELEASE_VERSION}
       --build-arg UCS_VERSION=${UCS_VERSION}
 
-container-sign:
+container-sign-external:
   parallel:
     matrix: *post-build-matrix
   variables:
