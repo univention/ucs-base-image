@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.12.0...v0.13.0) (2024-06-18)
+
+
+### Features
+
+* build 5.0-8 and drop 5.0-6 ([da53c6b](https://git.knut.univention.de/univention/components/ucs-base-image/commit/da53c6b40f736281c55c515db1202a6031a55515))
+
 ## [0.12.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.11.3...v0.12.0) (2024-04-18)
 
 
