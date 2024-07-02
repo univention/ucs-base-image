@@ -99,6 +99,6 @@ docker compose run --rm pre-commit
 
 ## Contact
 
-- Team SouvAP Dev
+- Team Nubus Dev
   - <johannes.bornhold.extern@univention.de>
   - <conde-segovia.extern@univention.de>
