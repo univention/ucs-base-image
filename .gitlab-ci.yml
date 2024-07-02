@@ -106,7 +106,7 @@ container-add-date-based-tags:
           - *ucs-base-matrix-stable
   variables:
     GIT_STRATEGY: none
-    UCS_VERSIONS: 507 508
+    UCS_VERSIONS: 507 508 520
   script:
     - |
       for ucs_version in $UCS_VERSIONS
