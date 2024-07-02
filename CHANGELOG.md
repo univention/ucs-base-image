@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.13.0...v0.13.1) (2024-07-02)
+
+
+### Bug Fixes
+
+* team name (to trigger version bump) ([5d3ceea](https://git.knut.univention.de/univention/components/ucs-base-image/commit/5d3ceea22992433cfac8b610234aa7e8df66fc7f))
+
 ## [0.13.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.12.0...v0.13.0) (2024-06-18)
 
 
