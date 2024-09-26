@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.2](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.13.1...v0.13.2) (2024-09-26)
+
+
+### Bug Fixes
+
+* drop developer documentation ([fbf5abe](https://git.knut.univention.de/univention/components/ucs-base-image/commit/fbf5abe29620830dc6b24432909889c2fd675ec9))
+
 ## [0.13.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.13.0...v0.13.1) (2024-07-02)
 
 
