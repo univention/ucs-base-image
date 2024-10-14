@@ -16,6 +16,17 @@ include:
       - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
 
+stages:
+  - "lint"
+  - "prepare"
+  - "build"
+  - "post-build"
+  - "test"
+  - "trigger"
+  - "package"
+  - "publish"
+  - "deploy"
+
 variables:
   EXTERNAL_REGISTRY: "docker.software-univention.de"
   TEST_DATE_BASED_TAGGING:
@@ -46,8 +57,7 @@ container-build:
     - "rm -rf /var/run"
   parallel:
     matrix:
-      - &ucs-base-matrix-stable
-        IMAGE_BASENAME: "ucs-base"
+      - IMAGE_BASENAME: "ucs-base"
         UCS_VERSION:
           - 507
           - 508
@@ -91,18 +101,11 @@ container-build:
 
 
 container-add-date-based-tags:
-  stage: build
+  stage: post-build
   extends: .skopeo
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $TEST_DATE_BASED_TAGGING == "true"
-  needs:
-    - job: pre-semantic-release
-    - job: container-build
-      artifacts: false
-      parallel:
-        matrix:
-          - *ucs-base-matrix-stable
   variables:
     GIT_STRATEGY: none
     UCS_VERSIONS: 507 508 520
