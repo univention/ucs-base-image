@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.3](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.13.2...v0.13.3) (2024-10-15)
+
+
+### Bug Fixes
+
+* Ensure that the date-based tags are only added after the new container images are built ([f5980fa](https://git.knut.univention.de/univention/components/ucs-base-image/commit/f5980fa530a7c6424219529f267702157c45b254)), closes [univention/customers/dataport/team-souvap#880](https://git.knut.univention.de/univention/customers/dataport/team-souvap/issues/880)
+
 ## [0.13.2](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.13.1...v0.13.2) (2024-09-26)
 
 
