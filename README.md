@@ -63,19 +63,25 @@ ENTRYPOINT ["./entrypoint.sh"]
 CMD ["/path/to/application", "--argument", "value"]
 ```
 
+### Extensibility of the entrypoint mechanism
+
 Any preparation of the environment can be done by copying a shell script
 into the `/entrypoint.d/` folder.
 
 Preferably the file names should follow the pattern of `[0-9][0-9]-name.(envsh|sh)`.
 The number in the beginning determines the order in which the entrypoints are executed.
 
+If in doubt, use `50-` as the prefix so that it is easy to run scripts before or
+after your script in derived containers for development or testing purposes.
+Also be aware that the usage in the final environment may need special tweaks
+which can be achieved by mounting scripts into this location.
+
 File whose names end with `.envsh` are `source`d (i.e. good for setting environment variables),
 while those ending with `.sh` are running in a sub-shell.
 
-Please do _not_ put a `99-run.sh` to run your application,
-as this makes debugging tedious.
-Instead define the `CMD` as above.
-This way, anyone can `docker run ... bash` to enter a shell inside the prepared environment.
+Please do _not_ put a `99-run.sh` to run your application, as this makes
+debugging tedious. Instead define the `CMD` as above. This way, anyone can
+`docker run ... bash` to enter a shell inside the prepared environment.
 
 ## Development setup
 
