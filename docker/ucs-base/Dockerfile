@@ -91,6 +91,7 @@ RUN \
 
 RUN chroot /work apt-get -qq update
 RUN chroot /work apt-get -q --assume-yes dist-upgrade
+RUN chroot /work apt-get -qq install tini
 RUN rm -rf /work/var/lib/apt/lists/* /work/var/cache/apt/archives
 RUN find /work/var '(' -name '*.deb' -o -name '*.log' -o -name '*.log.?z' -o -name '*-old' ')' -delete
 
@@ -107,7 +108,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN mkdir /entrypoint.d
 COPY entrypoint.sh /
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["tini", "--", "/entrypoint.sh"]
 CMD ["bash"]
 
 

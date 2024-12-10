@@ -54,12 +54,26 @@ and has a utility to add the sources of a branch from the `ucs` repository.
 
 See the file `docker/ucs-base/Dockerfile.usage-example`.
 
-### Entrypoint handling
+### Entrypoint handling and the PID 1 duties
 
-The image contains the file `docker/entrypoint.sh` in `/entrypoint.sh`.
-Ideally any derived containers should run it as follows:
+The image contains the file `docker/entrypoint.sh` in `/entrypoint.sh` and uses
+the following default configuration:
+
 ```Dockerfile
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["tini", "--", "/entrypoint.sh"]
+```
+
+This uses `tini` as the special process with PID 1 so that proper signal
+handling is provided by default. For derived containers it is sufficient to
+start the application via the `CMD` directive.
+
+Derived containers which handle Signals properly and take care of zombie
+processes should override this configuration as follows:
+
+```Dockerfile
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Run your application via CMD
 CMD ["/path/to/application", "--argument", "value"]
 ```
 
