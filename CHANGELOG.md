@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.13.3...v0.14.0) (2024-12-11)
+
+
+### Features
+
+* Run "tini" by default in the entrypoint ([fcffc0e](https://git.knut.univention.de/univention/components/ucs-base-image/commit/fcffc0e5847a2f14f2ad33d063db63933a6ffa6b))
+
 ## [0.13.3](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.13.2...v0.13.3) (2024-10-15)
 
 
