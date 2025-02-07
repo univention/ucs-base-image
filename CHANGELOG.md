@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.14.0...v0.15.0) (2025-02-07)
+
+
+### Features
+
+* public mirror for 5.2/5.1 ([aeee5b5](https://git.knut.univention.de/univention/components/ucs-base-image/commit/aeee5b5a069b31537cb9cf4c00ddc497d8d3d809))
+
 ## [0.14.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.13.3...v0.14.0) (2024-12-11)
 
 
