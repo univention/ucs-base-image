@@ -40,11 +40,13 @@ SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 RUN apt-get -qq update && apt-get -q install --assume-yes --no-install-recommends debootstrap findutils
 
+# there is special handling for bookworm in this script, so we need to apply this to ucs52? as well
+RUN sed -e '/^work_out_debs/,/^}/s/bookworm)$/bookworm|ucs52?)/' -i /usr/share/debootstrap/scripts/debian-common
+
 #  hadliont ignore=DL3059
 RUN debootstrap \
     --no-check-gpg \
     --no-check-certificate \
-    --no-merged-usr \
     --variant='minbase' \
     --include='univention-archive-key' \
     "ucs${UCS_VERSION}" \
