@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.16.0...v0.16.1) (2025-02-14)
+
+
+### Bug Fixes
+
+* add date-based tags to the ucs-base-python image ([3ed128d](https://git.knut.univention.de/univention/components/ucs-base-image/commit/3ed128d3803a323c50b51df363a611e6e9c39ccb))
+
 ## [0.16.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.15.0...v0.16.0) (2025-02-14)
 
 
