@@ -101,7 +101,7 @@ RUN rm -rf /work/dev; \
     rm -rf /work/sys; \
     rm -rf /work/proc;
 
-FROM scratch as final
+FROM scratch AS final
 COPY --from=builder /work /
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
@@ -113,11 +113,11 @@ ENTRYPOINT ["tini", "--", "/entrypoint.sh"]
 CMD ["bash"]
 
 
-FROM final as final-with-packages
+FROM final AS final-with-packages
 RUN apt-get update
 
 
-FROM final as dev
+FROM final AS dev
 
 ARG APT_KEY_URL_DEV=http://omar.knut.univention.de/build2/git/key.pub
 
@@ -126,3 +126,8 @@ ADD ${APT_KEY_URL_DEV} /etc/apt/trusted.gpg.d/development-key-omar.gpg
 RUN chmod a+r /etc/apt/trusted.gpg.d/development-key-omar.gpg
 
 COPY ucs-dev-add-branch.sh /usr/local/bin/
+
+FROM final-with-packages as final-with-packages-and-python
+
+# We need to keep the package lists to allow reproducible builds downstream
+RUN apt-get --assume-yes --verbose-versions --no-install-recommends install python3

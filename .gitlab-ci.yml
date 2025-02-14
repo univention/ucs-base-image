@@ -5,7 +5,7 @@
 
 include:
   - project: "univention/customers/dataport/upx/common-ci"
-    ref: "v1.29.0"
+    ref: "v1.36.2"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -73,6 +73,12 @@ container-build:
           - 520
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages"
+        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+      - IMAGE_BASENAME: "ucs-base-python"
+        UCS_VERSION:
+          - 520
+        APT_REPOSITORY: "http://updates-test.software-univention.de/"
+        TARGET: "final-with-packages-and-python"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
       - IMAGE_BASENAME: "ucs-base-dev"
         UCS_VERSION:
