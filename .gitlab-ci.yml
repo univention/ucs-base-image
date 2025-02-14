@@ -17,7 +17,6 @@ include:
       - "jobs/lint-pre-commit.yaml"
 
 stages:
-  - "lint"
   - "prepare"
   - "build"
   - "post-build"
@@ -26,6 +25,7 @@ stages:
   - "package"
   - "publish"
   - "deploy"
+  - "lint"
 
 variables:
   EXTERNAL_REGISTRY: "docker.software-univention.de"
