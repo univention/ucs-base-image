@@ -157,24 +157,6 @@ test-ucs-base-usage-example:
       --build-arg UCS_BASE_IMAGE_TAG=${RELEASE_VERSION}
       --build-arg UCS_VERSION=${UCS_VERSION}
 
-container-generate-sbom:
-  parallel:
-    matrix: *post-build-matrix
-  variables:
-    IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
-
-container-sign:
-  parallel:
-    matrix: *post-build-matrix
-  variables:
-    IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
-
-container-security-scan:
-  parallel:
-    matrix: *post-build-matrix
-  variables:
-    IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
-
 mirror-release:
   stage: "publish"
   image: "${RUNNER_REGISTRY_IMAGE}:${RUNNER_IMAGE_TAG}"
