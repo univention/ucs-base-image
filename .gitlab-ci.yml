@@ -111,21 +111,29 @@ container-add-date-based-tags:
   extends: .skopeo
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: "$CI_MERGE_REQUEST_DESCRIPTION =~ /force-date-based-tags/"
     - if: $TEST_DATE_BASED_TAGGING == "true"
   variables:
     GIT_STRATEGY: none
     UCS_VERSIONS: 507 508 520
   script:
     - |
-      for ucs_version in $UCS_VERSIONS
-      do
-        SOURCE_IMAGE_TAG=$CI_REGISTRY_IMAGE/ucs-base-$ucs_version:$RELEASE_VERSION
-        TARGET_IMAGE_TAG=$SOURCE_IMAGE_TAG-build-$(date -I)
-        echo "Tagging"
-        echo "from: $SOURCE_IMAGE_TAG"
-        echo "to: $TARGET_IMAGE_TAG"
-        /bin/skopeo copy docker://$SOURCE_IMAGE_TAG docker://$TARGET_IMAGE_TAG
+      tag_image() {
+        local image_prefix=$1
+        local ucs_version=$2
+        local source_image="$CI_REGISTRY_IMAGE/${image_prefix}-${ucs_version}:$RELEASE_VERSION"
+        local target_image="${source_image}-build-$(date -I)"
+        echo "Tagging image"
+        echo "  from: $source_image"
+        echo "    to: $target_image"
+        /bin/skopeo copy docker://$source_image docker://$target_image
+      }
+
+      for ucs_version in $UCS_VERSIONS; do
+        tag_image "ucs-base" "$ucs_version"
       done
+
+      tag_image "ucs-base-python" "520"
 
 
 test-ucs-base-usage-example:
