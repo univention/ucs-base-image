@@ -90,10 +90,10 @@ RUN echo "deb-src ${APT_REPOSITORY} ucs${UCS_VERSION} main" >> /work/etc/apt/sou
     echo "deb-src ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list
 
 RUN chroot /work apt-get -qq update
-RUN chroot /work apt-get -q --assume-yes dist-upgrade
 RUN chroot /work apt-get -qq install \
     usr-is-merged \
     tini
+RUN chroot /work apt-get -q --assume-yes dist-upgrade
 RUN rm -rf /work/var/lib/apt/lists/* /work/var/cache/apt/archives
 RUN find /work/var '(' -name '*.deb' -o -name '*.log' -o -name '*.log.?z' -o -name '*-old' ')' -delete
 
