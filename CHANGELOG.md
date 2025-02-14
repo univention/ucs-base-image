@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.16.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.15.0...v0.16.0) (2025-02-14)
+
+
+### Features
+
+* build a base image with python3.11 preinstalled ([30a6404](https://git.knut.univention.de/univention/components/ucs-base-image/commit/30a640471ab5b8fe3c6540583678d4eb8ee495d1))
+
+
+### Bug Fixes
+
+* istall usr-is-merged before dist-upgrade because init-system-helpers depends on it ([d5339a3](https://git.knut.univention.de/univention/components/ucs-base-image/commit/d5339a3688e378ef505f4b043daf9b908bd16ad1))
+
 ## [0.15.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.14.0...v0.15.0) (2025-02-07)
 
 
