@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.2](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.16.1...v0.16.2) (2025-03-18)
+
+
+### Bug Fixes
+
+* add 5.2-1 and 5.0-10 to .gitlab-ci.yml ([f61a0ca](https://git.knut.univention.de/univention/components/ucs-base-image/commit/f61a0ca4d9919cfab15fdb06b6966101996d5166))
+
 ## [0.16.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.16.0...v0.16.1) (2025-02-14)
 
 
