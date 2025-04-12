@@ -4,11 +4,12 @@
 package main
 
 import (
-	"io"
-	"io/fs"
+	"fmt"
 	"log/slog"
 	"os"
 	"path/filepath"
+
+	"github.com/otiai10/copy"
 )
 
 func main() {
@@ -22,10 +23,21 @@ func main() {
 
 func copyPlugins(source string, destination string) error {
 	slog.Info("Copying the Nubus extension files into the target volume", "source", source, "destination", destination)
-
 	entries, err := os.ReadDir(source)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read source directory: %s, error: %w", source, err)
+	}
+
+	opts := copy.Options{
+		Skip: func(info os.FileInfo, src, dest string) (bool, error) {
+			if info.IsDir() {
+				return false, nil
+			}
+			if _, err := os.Stat(dest); err == nil {
+				slog.Info("This extension is overwriting an existing file from Nubus core or a previously loaded extension", "source", src, "destination", dest)
+			}
+			return false, nil
+		},
 	}
 
 	for _, entry := range entries {
@@ -34,73 +46,23 @@ func copyPlugins(source string, destination string) error {
 		}
 
 		pluginType := entry.Name()
-		srcPath := filepath.Join(source, pluginType)
-		dstPath := filepath.Join(destination, pluginType)
+		targetDir := filepath.Join(destination, pluginType)
 
-		info, err := os.Stat(dstPath)
+		info, err := os.Stat(targetDir)
 		if err != nil || !info.IsDir() {
-			slog.Info("SKIP - Plugin type not in target", "pluginType", pluginType)
+			slog.Info("SKIP - Plugin type not in destination, skipping", "pluginType", pluginType, "destination", destination)
 			continue
 		}
 
-		slog.Info("COPY - Plugin type found, copying files", "pluginType", pluginType)
-		if err := copyDirectoryContents(srcPath, dstPath); err != nil {
-			slog.Error("Error copying plugin", "pluginType", pluginType, "error", err)
-			return err
-		}
-	}
-	return nil
-}
-
-func copyDirectoryContents(src, dst string) error {
-	entries, err := os.ReadDir(src)
-	if err != nil {
-		return err
-	}
-
-	for _, entry := range entries {
-		srcPath := filepath.Join(src, entry.Name())
-		dstPath := filepath.Join(dst, entry.Name())
-
-		info, err := entry.Info()
+		slog.Info("COPY - Plugin type in destination, copying files", "pluginType", pluginType, "destination", destination)
+		err = copy.Copy(
+			filepath.Join(source, pluginType),
+			filepath.Join(destination, pluginType),
+			opts,
+		)
 		if err != nil {
-			return err
-		}
-
-		if entry.IsDir() {
-			if err := os.MkdirAll(dstPath, info.Mode()); err != nil {
-				return err
-			}
-			if err := copyDirectoryContents(srcPath, dstPath); err != nil {
-				return err
-			}
-		} else {
-			if _, err := os.Stat(dstPath); err == nil {
-				slog.Warn("This extension is overwriting an existing file from Nubus core or a previously loaded extension.", "file", dstPath)
-			}
-			if err := copyFile(srcPath, dstPath, info.Mode()); err != nil {
-				return err
-			}
+			return fmt.Errorf("failed to copy plugin files. pluginType: %s, error: %w", pluginType, err)
 		}
 	}
 	return nil
-}
-
-// copyFile opens the source file and copies its content to the destination,
-// preserving its file mode.
-func copyFile(srcPath, dstPath string, mode fs.FileMode) error {
-	srcFile, err := os.Open(srcPath)
-	if err != nil {
-		return err
-	}
-	defer srcFile.Close()
-
-	dstFile, err := os.OpenFile(dstPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, mode)
-	if err != nil {
-		return err
-	}
-	defer dstFile.Close()
-
-	_, err = io.Copy(dstFile, srcFile)
-	return err
 }
