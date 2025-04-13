@@ -8,10 +8,11 @@ WORKDIR /app
 COPY go.mod go.sum /app/
 COPY cmd /app/cmd
 
+# Build size optimized go binary: strip debug info and disable inlining
 RUN \
   go vet -v ./... && \
   go test ./cmd/... -v && \
-  CGO_ENABLED=0 GOOS=linux go build ./...
+  CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -gcflags=all=-l ./...
 
 FROM scratch AS final
 
