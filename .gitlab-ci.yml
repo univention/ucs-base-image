@@ -40,8 +40,8 @@ variables:
       - "false"
 
 .publish-matrix: &publish-matrix
-  - IMAGE_NAME:
-    - "packaged-integration-base"
+  - IMAGE_NAME: "packaged-integration-base"
+    KANIKO_ARGS: "--single-snapshot"
 
 container-build-ucs-base:
   # The GitLab runner mounts the Docker socket into /var/run.
