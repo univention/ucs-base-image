@@ -12,7 +12,8 @@ include:
       - "templates/kaniko.yaml"
       - "templates/harbor.yaml"
       - "jobs/semantic-release-env.yaml"
-      - "jobs/container-build.yaml"
+      # - "jobs/container-build.yaml"
+      - "jobs/container-build-external.yaml"
       - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
   - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man-single@v1.57.0"
@@ -78,6 +79,10 @@ variables:
       - "ucs-base"
     UCS_VERSION: *ucs-versions
 
+.publish-matrix: &publish-matrix
+  - IMAGE_NAME:
+    - "packaged-integration-base"
+
 find-latest-errata:
   stage: prepare
   script:
@@ -87,11 +92,12 @@ find-latest-errata:
     reports:
       dotenv: errata.env
 
-container-build:
+container-build-ucs-base:
   # The GitLab runner mounts the Docker socket into /var/run.
   # Kaniko either ignores /var/run (default), or the socket ends up in the tarball.
   # We unmount the socket here, and later use `--ignore-var-run=false` to have a
   # regular /var/run directory in the final image.
+  extends: container-build
   before_script:
     - "umount /var/run/docker.sock"
     - "rm -rf /var/run"
@@ -178,6 +184,23 @@ sbon-scan-and-upload-single-image:
     - if: $CI_MERGE_REQUEST_ID
       when: never
     - when: always
+
+container-build:
+  parallel:
+    matrix: *publish-matrix
+
+container-malware-scan:
+  parallel:
+    matrix: *publish-matrix
+
+push-image-external:
+  parallel:
+    matrix: *publish-matrix
+
+container-sign-external:
+  parallel:
+    matrix: *publish-matrix
+
 
 container-add-date-based-tags:
   stage: post-build
