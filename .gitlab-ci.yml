@@ -12,7 +12,8 @@ include:
       - "templates/kaniko.yaml"
       - "templates/harbor.yaml"
       - "jobs/semantic-release-env.yaml"
-      - "jobs/container-build.yaml"
+      # - "jobs/container-build.yaml"
+      - "jobs/container-build-external.yaml"
       - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
 
@@ -38,19 +39,16 @@ variables:
       - "true"
       - "false"
 
-.post-build-matrix: &post-build-matrix
-  - IMAGE_BASENAME:
-      - "ucs-base"
-    UCS_VERSION:
-      - 5010
-      - 520
-      - 521
+.publish-matrix: &publish-matrix
+  - IMAGE_NAME:
+    - "packaged-integration-base"
 
-container-build:
+container-build-ucs-base:
   # The GitLab runner mounts the Docker socket into /var/run.
   # Kaniko either ignores /var/run (default), or the socket ends up in the tarball.
   # We unmount the socket here, and later use `--ignore-var-run=false` to have a
   # regular /var/run directory in the final image.
+  extends: container-build
   before_script:
     - "umount /var/run/docker.sock"
     - "rm -rf /var/run"
@@ -94,6 +92,22 @@ container-build:
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target ${TARGET}
+
+container-build:
+  parallel:
+    matrix: *publish-matrix
+
+container-malware-scan:
+  parallel:
+    matrix: *publish-matrix
+
+push-image-external:
+  parallel:
+    matrix: *publish-matrix
+
+container-sign-external:
+  parallel:
+    matrix: *publish-matrix
 
 
 container-add-date-based-tags:
