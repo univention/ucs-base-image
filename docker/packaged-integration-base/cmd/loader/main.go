@@ -27,6 +27,10 @@ func copyPlugins(source string, destination string) error {
 	if err != nil {
 		return fmt.Errorf("failed to read source directory: %s, error: %w", source, err)
 	}
+  _, err = os.Stat(destination)
+  if err != nil {
+    return fmt.Errorf("missing destination directory: %s, error: %w", destination, err)
+  }
 
 	opts := copy.Options{
 		Skip: func(info os.FileInfo, src, dest string) (bool, error) {
