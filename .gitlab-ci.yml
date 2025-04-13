@@ -80,8 +80,8 @@ variables:
     UCS_VERSION: *ucs-versions
 
 .publish-matrix: &publish-matrix
-  - IMAGE_NAME:
-    - "packaged-integration-base"
+  - IMAGE_NAME: "packaged-integration-base"
+    KANIKO_ARGS: "--single-snapshot"
 
 find-latest-errata:
   stage: prepare
