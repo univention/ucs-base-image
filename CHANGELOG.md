@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.17.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.17.0...v0.17.1) (2025-05-09)
+
+
+### Bug Fixes
+
+* move addlicense pre-commit hook ([c02d6fd](https://git.knut.univention.de/univention/components/ucs-base-image/commit/c02d6fd8f6d037f85085e4982d8bef71b29b0a9b))
+* update common-ci to v1.40.4 ([b06bd12](https://git.knut.univention.de/univention/components/ucs-base-image/commit/b06bd127e8b783478c74122939284335c058702c))
+
 ## [0.17.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.16.2...v0.17.0) (2025-05-09)
 
 
