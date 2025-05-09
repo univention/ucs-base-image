@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.17.2](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.17.1...v0.17.2) (2025-05-09)
+
+
+### Bug Fixes
+
+* common-ci reference ([6087730](https://git.knut.univention.de/univention/components/ucs-base-image/commit/60877307a31a457d8244b49fad9e5bae7dbc078c))
+* update common-ci to main ([686071f](https://git.knut.univention.de/univention/components/ucs-base-image/commit/686071f3de775987d8c9049ec7946f7321652675))
+
 ## [0.17.1](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.17.0...v0.17.1) (2025-05-09)
 
 
