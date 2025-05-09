@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.16.2...v0.17.0) (2025-05-09)
+
+
+### Features
+
+* move gitlab-utils image ([e6eb621](https://git.knut.univention.de/univention/components/ucs-base-image/commit/e6eb621256e4ed9aebdee84a780a7ecc39833125))
+
 ## [0.16.2](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.16.1...v0.16.2) (2025-03-18)
 
 
