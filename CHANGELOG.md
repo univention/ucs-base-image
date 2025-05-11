@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.17.3...v0.18.0) (2025-05-11)
+
+
+### Features
+
+* move and upgrade ucs-base-image to 0.17.3-build-2025-05-11 ([4b37750](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/4b3775036cd0d73d2ba5b18f12bc624266c5a04d))
+
 ## [0.17.3](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.17.2...v0.17.3) (2025-05-11)
 
 
