@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.17.3](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.17.2...v0.17.3) (2025-05-11)
+
+
+### Bug Fixes
+
+* update image path in dev Dockerfile example ([c91d3dd](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/c91d3dd5593b730c19a5d4cca91e806aed73535d))
+* update image path in Dockerfile example ([a9bd915](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/a9bd91561a5f7acbf813c7f105ff40bdf17b4b60))
+
 ## [0.17.2](https://git.knut.univention.de/univention/components/ucs-base-image/compare/v0.17.1...v0.17.2) (2025-05-09)
 
 
