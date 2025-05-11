@@ -1,10 +1,10 @@
-ARG UCS_BASE_IMAGE_TAG=latest
-ARG UCS_VERSION=506
+ARG UCS_BASE_IMAGE_TAG=0.17.3-build-2025-05-11
+ARG UCS_VERSION=521
 
 FROM gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-dev-${UCS_VERSION}:${UCS_BASE_IMAGE_TAG}
 
 # hadolint ignore=DL3008
-RUN ucs-dev-add-branch.sh 5-0-6 \
+RUN ucs-dev-add-branch.sh 5-2-1 \
     && apt-get update \
     && apt-get --assume-yes --verbose-versions --no-install-recommends install \
       python3-univention-config-registry \
