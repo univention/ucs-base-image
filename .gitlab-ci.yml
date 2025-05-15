@@ -61,6 +61,7 @@ container-build:
           - 5010
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages"
+
       - IMAGE_BASENAME: "ucs-base"
         UCS_VERSION:
           - 520
@@ -68,18 +69,21 @@ container-build:
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
+
       - IMAGE_BASENAME: "ucs-base-python"
         UCS_VERSION:
           - 520
           - 521
-        APT_REPOSITORY: "http://updates-test.software-univention.de/"
+        APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages-and-python"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
+
       - IMAGE_BASENAME: "ucs-base-dev"
         UCS_VERSION:
           - 5010
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "dev"
+
       - IMAGE_BASENAME: "ucs-base-dev"
         UCS_VERSION:
           - 520
