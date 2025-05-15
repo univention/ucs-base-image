@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.1](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.18.0...v0.18.1) (2025-05-15)
+
+
+### Bug Fixes
+
+* **ucs-base-python:** use non-test debian package registry ([f3754ba](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/f3754baffe100a9cb9d9a0d1ff58cf23281d9e01)), closes [univention/dev/internal/team-nubus#1143](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1143)
+
 ## [0.18.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.17.3...v0.18.0) (2025-05-11)
 
 
