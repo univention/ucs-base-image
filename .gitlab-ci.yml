@@ -45,6 +45,7 @@ variables:
       - 5010
       - 520
       - 521
+      - 522
 
 container-build:
   # The GitLab runner mounts the Docker socket into /var/run.
@@ -66,6 +67,7 @@ container-build:
         UCS_VERSION:
           - 520
           - 521
+          - 522
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
@@ -74,6 +76,7 @@ container-build:
         UCS_VERSION:
           - 520
           - 521
+          - 522
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages-and-python"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
@@ -88,6 +91,7 @@ container-build:
         UCS_VERSION:
           - 520
           - 521
+          - 522
         APT_REPOSITORY: "http://updates-test.software-univention.de/"
         TARGET: "dev"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
@@ -109,7 +113,7 @@ container-add-date-based-tags:
     - if: $TEST_DATE_BASED_TAGGING == "true"
   variables:
     GIT_STRATEGY: none
-    UCS_VERSIONS: 5010 520 521
+    UCS_VERSIONS: 5010 520 521 522
   script:
     - |
       tag_image() {
@@ -127,7 +131,7 @@ container-add-date-based-tags:
         tag_image "ucs-base" "$ucs_version"
       done
 
-      for ucs_version in 520 521; do
+      for ucs_version in 520 521 522; do
         tag_image "ucs-base-python" "$ucs_version"
       done
 
@@ -144,12 +148,14 @@ test-ucs-base-usage-example:
           - 5010
           - 520
           - 521
+          - 522
       - IMAGE_BASENAME: "ucs-base-dev"
         DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
         UCS_VERSION:
           - 5010
           - 520
           - 521
+          - 522
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
@@ -171,6 +177,7 @@ mirror-release:
           - 5010
           - 520
           - 521
+          - 522
   script:
     - |
       set -eu
