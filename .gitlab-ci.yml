@@ -43,7 +43,6 @@ variables:
       - "ucs-base"
     UCS_VERSION:
       - 5010
-      - 520
       - 521
       - 522
 
@@ -65,7 +64,6 @@ container-build:
 
       - IMAGE_BASENAME: "ucs-base"
         UCS_VERSION:
-          - 520
           - 521
           - 522
         APT_REPOSITORY: "http://updates.software-univention.de/"
@@ -74,7 +72,6 @@ container-build:
 
       - IMAGE_BASENAME: "ucs-base-python"
         UCS_VERSION:
-          - 520
           - 521
           - 522
         APT_REPOSITORY: "http://updates.software-univention.de/"
@@ -89,7 +86,6 @@ container-build:
 
       - IMAGE_BASENAME: "ucs-base-dev"
         UCS_VERSION:
-          - 520
           - 521
           - 522
         APT_REPOSITORY: "http://updates-test.software-univention.de/"
@@ -113,7 +109,7 @@ container-add-date-based-tags:
     - if: $TEST_DATE_BASED_TAGGING == "true"
   variables:
     GIT_STRATEGY: none
-    UCS_VERSIONS: 5010 520 521 522
+    UCS_VERSIONS: 5010 521 522
   script:
     - |
       tag_image() {
@@ -131,7 +127,7 @@ container-add-date-based-tags:
         tag_image "ucs-base" "$ucs_version"
       done
 
-      for ucs_version in 520 521 522; do
+      for ucs_version in 521 522; do
         tag_image "ucs-base-python" "$ucs_version"
       done
 
@@ -146,14 +142,12 @@ test-ucs-base-usage-example:
         DOCKERFILE_PATH: "Dockerfile.usage-example"
         UCS_VERSION:
           - 5010
-          - 520
           - 521
           - 522
       - IMAGE_BASENAME: "ucs-base-dev"
         DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
         UCS_VERSION:
           - 5010
-          - 520
           - 521
           - 522
   variables:
@@ -175,7 +169,6 @@ mirror-release:
     matrix:
       - UCS_VERSION:
           - 5010
-          - 520
           - 521
           - 522
   script:
