@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.18.2](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.18.1...v0.18.2) (2025-06-12)
+
+
+### Bug Fixes
+
+* add 5.2-2 in .gitlab-ci.yml ([8b52b7d](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/8b52b7d4aa044290dc6a126962a538fc4256bf77)), closes [univention/dev/ucs#2915](https://git.knut.univention.de/univention/dev/ucs/issues/2915)
+* remove 5.2-0 from .gitlab-ci.yml ([4722cb5](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/4722cb57ec5daa87664dc64190cb6eebb840ff0d)), closes [univention/dev/ucs#2915](https://git.knut.univention.de/univention/dev/ucs/issues/2915)
+
 ## [0.18.1](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.18.0...v0.18.1) (2025-05-15)
 
 
