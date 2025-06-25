@@ -4,8 +4,8 @@
 # SPDX-FileCopyrightText: 2023 Univention GmbH
 
 include:
-  - project: "univention/customers/dataport/upx/common-ci"
-    ref: "main"
+  - project: "univention/dev/nubus-for-k8s/common-ci"
+    ref: "v1.43.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -93,7 +93,7 @@ container-build:
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
-    IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
+    IMAGE_NAME: "${IMAGE_BASENAME}"
     KANIKO_ARGS: --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
@@ -103,10 +103,10 @@ container-build:
 container-add-date-based-tags:
   stage: post-build
   extends: .skopeo
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: "$CI_MERGE_REQUEST_DESCRIPTION =~ /force-date-based-tags/"
-    - if: $TEST_DATE_BASED_TAGGING == "true"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  #   - if: "$CI_MERGE_REQUEST_DESCRIPTION =~ /force-date-based-tags/"
+  #   - if: $TEST_DATE_BASED_TAGGING == "true"
   variables:
     GIT_STRATEGY: none
     UCS_VERSIONS: 5010 521 522
@@ -115,8 +115,8 @@ container-add-date-based-tags:
       tag_image() {
         local image_prefix=$1
         local ucs_version=$2
-        local source_image="$CI_REGISTRY_IMAGE/${image_prefix}-${ucs_version}:$RELEASE_VERSION"
-        local target_image="${source_image}-build-$(date -I)"
+        local source_image="$CI_REGISTRY_IMAGE/${image_prefix}:$RELEASE_VERSION"
+        local target_image="${source_image}-build-${ucs_version}-$(date -I)"
         echo "Tagging image"
         echo "  from: $source_image"
         echo "    to: $target_image"
