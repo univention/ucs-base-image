@@ -1,0 +1,14 @@
+ARG UCS_BASE_IMAGE_TAG=0.18.3-build-2025-05-11
+ARG UCS_VERSION=521
+
+FROM gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base:${UCS_BASE_IMAGE_TAG}-${UCS_VERSION}
+
+# Note that the packages index is included in the base image.
+#
+# Using the common pattern to run "apt-get update" beforehand is possible, it
+# will lead to non-reproducible builds though since the errata updates are a
+# rolling release.
+
+# hadolint ignore=DL3008
+RUN apt-get --assume-yes --verbose-versions --no-install-recommends install \
+      python3-univention-config-registry
