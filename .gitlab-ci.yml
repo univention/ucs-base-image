@@ -206,7 +206,7 @@ container-build:
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}"
-    IMAGE_TAG: "${RELEASE_VERSION}-${UCS_VERSION}"
+    VERSION: "${RELEASE_VERSION}-${UCS_VERSION}"
     KANIKO_ARGS: --ignore-var-run=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
