@@ -162,7 +162,7 @@ container-add-date-based-tags-new:
   stage: post-build
   extends: .skopeo
   rules:
-    # - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: "$CI_MERGE_REQUEST_DESCRIPTION =~ /force-date-based-tags/"
     - if: $TEST_DATE_BASED_TAGGING == "true"
   variables:
@@ -210,7 +210,7 @@ test-ucs-base-usage-example-new:
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}"
-    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/${IMAGE_BASENAME}-${UCS_VERSION}-usage-example"
+    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/${IMAGE_BASENAME}-usage-example"
     KANIKO_CACHE_ARGS: ""
     KANIKO_ARGS: --no-push
       --build-arg UCS_BASE_IMAGE_TAG=${RELEASE_VERSION}
