@@ -229,7 +229,7 @@ container-add-date-based-tags-new:
         local image_prefix=$1
         local ucs_version=$2
         local source_image="$CI_REGISTRY_IMAGE/${image_prefix}:$RELEASE_VERSION"
-        local target_image="${source_image}-build-${ucs_version}-$(date -I)"
+        local target_image="${source_image}-build-${ucs_version}-$(date +%Y%m%d)"
         echo "Tagging image"
         echo "  from: $source_image"
         echo "    to: $target_image"
