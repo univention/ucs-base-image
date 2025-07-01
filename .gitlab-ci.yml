@@ -46,118 +46,6 @@ variables:
       - 521
       - 522
 
-# container-build:
-#   # The GitLab runner mounts the Docker socket into /var/run.
-#   # Kaniko either ignores /var/run (default), or the socket ends up in the tarball.
-#   # We unmount the socket here, and later use `--ignore-var-run=false` to have a
-#   # regular /var/run directory in the final image.
-#   before_script:
-#     - "umount /var/run/docker.sock"
-#     - "rm -rf /var/run"
-#   parallel:
-#     matrix:
-#       - IMAGE_BASENAME: "ucs-base"
-#         UCS_VERSION:
-#           - 5010
-#         APT_REPOSITORY: "http://updates.software-univention.de/"
-#         TARGET: "final-with-packages"
-
-#       - IMAGE_BASENAME: "ucs-base"
-#         UCS_VERSION:
-#           - 521
-#           - 522
-#         APT_REPOSITORY: "http://updates.software-univention.de/"
-#         TARGET: "final-with-packages"
-#         DOCKERFILE_PATH: "usr-merge.Dockerfile"
-
-#       - IMAGE_BASENAME: "ucs-base-python"
-#         UCS_VERSION:
-#           - 521
-#           - 522
-#         APT_REPOSITORY: "http://updates.software-univention.de/"
-#         TARGET: "final-with-packages-and-python"
-#         DOCKERFILE_PATH: "usr-merge.Dockerfile"
-
-#       - IMAGE_BASENAME: "ucs-base-dev"
-#         UCS_VERSION:
-#           - 5010
-#         APT_REPOSITORY: "http://updates.software-univention.de/"
-#         TARGET: "dev"
-
-#       - IMAGE_BASENAME: "ucs-base-dev"
-#         UCS_VERSION:
-#           - 521
-#           - 522
-#         APT_REPOSITORY: "http://updates-test.software-univention.de/"
-#         TARGET: "dev"
-#         DOCKERFILE_PATH: "usr-merge.Dockerfile"
-#   variables:
-#     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
-#     IMAGE_NAME: "${IMAGE_BASENAME}"
-#     KANIKO_ARGS: --ignore-var-run=false
-#       --build-arg UCS_VERSION=${UCS_VERSION}
-#       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
-#       --target ${TARGET}
-
-
-# container-add-date-based-tags:
-#   stage: post-build
-#   extends: .skopeo
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-#     - if: "$CI_MERGE_REQUEST_DESCRIPTION =~ /force-date-based-tags/"
-#     - if: $TEST_DATE_BASED_TAGGING == "true"
-#   variables:
-#     GIT_STRATEGY: none
-#     UCS_VERSIONS: 5010 521 522
-#   script:
-#     - |
-#       tag_image() {
-#         local image_prefix=$1
-#         local ucs_version=$2
-#         local source_image="$CI_REGISTRY_IMAGE/${image_prefix}-${ucs_version}:$RELEASE_VERSION"
-#         local target_image="${source_image}-build-$(date -I)"
-#         echo "Tagging image"
-#         echo "  from: $source_image"
-#         echo "    to: $target_image"
-#         /bin/skopeo copy docker://$source_image docker://$target_image
-#       }
-
-#       for ucs_version in $UCS_VERSIONS; do
-#         tag_image "ucs-base" "$ucs_version"
-#       done
-
-#       for ucs_version in 521 522; do
-#         tag_image "ucs-base-python" "$ucs_version"
-#       done
-
-# test-ucs-base-usage-example:
-#   stage: "test"
-#   extends: ".kaniko"
-#   cache: null
-#   parallel:
-#     matrix:
-#       - IMAGE_BASENAME: "ucs-base"
-#         DOCKERFILE_PATH: "Dockerfile.usage-example"
-#         UCS_VERSION:
-#           - 5010
-#           - 521
-#           - 522
-#       - IMAGE_BASENAME: "ucs-base-dev"
-#         DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
-#         UCS_VERSION:
-#           - 5010
-#           - 521
-#           - 522
-#   variables:
-#     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
-#     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
-#     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/${IMAGE_BASENAME}-${UCS_VERSION}-usage-example"
-#     KANIKO_CACHE_ARGS: ""
-#     KANIKO_ARGS: --no-push
-#       --build-arg UCS_BASE_IMAGE_TAG=${RELEASE_VERSION}
-#       --build-arg UCS_VERSION=${UCS_VERSION}
-
 container-build:
   # The GitLab runner mounts the Docker socket into /var/run.
   # Kaniko either ignores /var/run (default), or the socket ends up in the tarball.
@@ -213,7 +101,7 @@ container-build:
       --target ${TARGET}
 
 
-container-add-date-based-tags-new:
+container-add-date-based-tags:
   stage: post-build
   extends: .skopeo
   rules:
@@ -244,20 +132,20 @@ container-add-date-based-tags-new:
         tag_image "ucs-base-python" "$ucs_version"
       done
 
-test-ucs-base-usage-example-new:
+test-ucs-base-usage-example:
   stage: "test"
   extends: ".kaniko"
   cache: null
   parallel:
     matrix:
       - IMAGE_BASENAME: "ucs-base"
-        DOCKERFILE_PATH: "Dockerfile.usage-example-new"
+        DOCKERFILE_PATH: "Dockerfile.usage-example"
         UCS_VERSION:
           - 5010
           - 521
           - 522
       - IMAGE_BASENAME: "ucs-base-dev"
-        DOCKERFILE_PATH: "dev.Dockerfile.usage-example-new"
+        DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
         UCS_VERSION:
           - 5010
           - 521
