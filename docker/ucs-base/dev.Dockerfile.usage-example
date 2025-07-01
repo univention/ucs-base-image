@@ -1,7 +1,7 @@
-ARG UCS_BASE_IMAGE_TAG=0.17.3-build-2025-05-11
+ARG UCS_BASE_IMAGE_TAG=0.18.3-build-2025-05-11
 ARG UCS_VERSION=521
 
-FROM gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-dev-${UCS_VERSION}:${UCS_BASE_IMAGE_TAG}
+FROM gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-dev:${UCS_BASE_IMAGE_TAG}-${UCS_VERSION}
 
 # hadolint ignore=DL3008
 RUN ucs-dev-add-branch.sh 5-2-1 \
