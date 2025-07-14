@@ -14,33 +14,31 @@ packages can be installed.
 It started based from a fragment which we saw being repeated over and over
 across many of our `Dockerfile` files.
 
-The images are tagged according to the following pattern:
+The images are tagged according to the following patterns:
 
-* `ucs-base-{500,501,502,503,504,505,506,510,520}`
-> * 50X based on `updates.software-univention.de`
-> * 5X0 based on `updates-test.software-univention.de`
-* `ucs-base-dev-{500,501,502,503,504,505,506,510,520}`
-> * 50X based on `updates.knut.univention.de`
-> * 5X0 based on `updates-test.software-univention.de`
+* `ucs-base` and `ucs-base-python` images include a build date for reproducibility:
+  `<image-name>:<UCS-version>-build.<build-date>`
+* `ucs-base-flex` images provide a rolling tag for the latest build of a given version:
+  `<image-name>:<UCS-version>`
 
-All with `latest` and semantic-release `v0.10.0`.
+Where:
+- `<image-name>` can be `ucs-base`, `ucs-base-flex`, or `ucs-base-python`.
+- `<UCS-version>` is the version of the underlying UCS distribution (e.g., `5.0.10`, `5.2.1`, `5.2.2`).
+- `<build-date>` is the date identifier when the image was built (e.g., `20250709`).
 
+Example tags:
+
+- `ucs-base:5.2.2-build.20250709`
+- `ucs-base-python:5.2.2-build.20250709`
+- `ucs-base-flex:5.2.2`
+
+The `latest` tag will point to the most recent build of the default `ucs-base` image.
 
 ## Errata release handling
 
 Be aware that the base containers do include the errata releases as well by
 default. This means that your images will potentially change if they are built
-again in the future.
-
-To mitigate this we do additionally tag the `50X` images with a date based
-suffix based on the build date and keep the packages included in the image. This
-way the downstream images can rely on `apt-get install` installing precisely the
-same packages again as long as there is no usage of `apt-get update`.
-
-Example tags:
-
-- `ucs-base-506:0.12.0-build-2024-04-18`
-- `ucs-base-507:0.12.0-build-2024-04-18`
+again in the future. The date-based tagging helps to mitigate this by providing a stable tag for a specific build.
 
 
 ## Provided images

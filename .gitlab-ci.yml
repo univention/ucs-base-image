@@ -91,6 +91,21 @@ container-build:
         APT_REPOSITORY: "http://updates-test.software-univention.de/"
         TARGET: "dev"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
+
+      - IMAGE_BASENAME: "ucs-base-flex"
+        UCS_VERSION:
+          - 5010
+        APT_REPOSITORY: "http://updates.software-univention.de/"
+        TARGET: "final"
+        DOCKERFILE_PATH: "Dockerfile"
+
+      - IMAGE_BASENAME: "ucs-base-flex"
+        UCS_VERSION:
+          - 521
+          - 522
+        APT_REPOSITORY: "http://updates.software-univention.de/"
+        TARGET: "final"
+        DOCKERFILE_PATH: "usr-merge.Dockerfile"
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
@@ -112,12 +127,39 @@ container-add-date-based-tags:
     UCS_VERSIONS: 5010 521 522
   script:
     - |
+      get_ucs_semver() {
+        local ucs_version=$1
+        if [ "$ucs_version" = "5010" ]; then
+          echo "5.0.10"
+        elif [ "$ucs_version" = "521" ]; then
+          echo "5.2.1"
+        elif [ "$ucs_version" = "522" ]; then
+          echo "5.2.2"
+        else
+          echo "$ucs_version" # Fallback for unknown versions
+        fi
+      }
+
       tag_image() {
         local image_prefix=$1
         local ucs_version=$2
+        local ucs_semver=$(get_ucs_semver "$ucs_version")
+        local build_date=$(date +%Y%m%d)
         local source_image="$CI_REGISTRY_IMAGE/${image_prefix}-${ucs_version}:$RELEASE_VERSION"
-        local target_image="${source_image}-build-$(date -I)"
+        local target_image="$CI_REGISTRY_IMAGE/${image_prefix}:${ucs_semver}-build.${build_date}"
         echo "Tagging image"
+        echo "  from: $source_image"
+        echo "    to: $target_image"
+        /bin/skopeo copy docker://$source_image docker://$target_image
+      }
+
+      tag_image_flex() {
+        local image_prefix=$1
+        local ucs_version=$2
+        local ucs_semver=$(get_ucs_semver "$ucs_version")
+        local source_image="$CI_REGISTRY_IMAGE/${image_prefix}-${ucs_version}:$RELEASE_VERSION"
+        local target_image="$CI_REGISTRY_IMAGE/${image_prefix}:${ucs_semver}"
+        echo "Tagging flex image"
         echo "  from: $source_image"
         echo "    to: $target_image"
         /bin/skopeo copy docker://$source_image docker://$target_image
@@ -125,6 +167,7 @@ container-add-date-based-tags:
 
       for ucs_version in $UCS_VERSIONS; do
         tag_image "ucs-base" "$ucs_version"
+        tag_image_flex "ucs-base-flex" "$ucs_version"
       done
 
       for ucs_version in 521 522; do
