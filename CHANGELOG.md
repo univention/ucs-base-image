@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.19.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.18.2...v0.19.0) (2025-07-14)
+
+
+### Features
+
+* semantic versioning for UCS base images ([a913596](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/a913596d9ea05eddbe07505c306e35fd062d0f0c)), closes [univention/dev/internal/team-nubus#1324](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1324)
+
+
+### Bug Fixes
+
+* common-ci reference ([fc388e3](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/fc388e32ce9144772421857e10f71ee50cd2e084)), closes [univention/dev/internal/team-nubus#1324](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1324)
+
 ## [0.18.2](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.18.1...v0.18.2) (2025-06-12)
 
 
