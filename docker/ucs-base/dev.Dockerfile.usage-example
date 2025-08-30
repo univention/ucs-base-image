@@ -3,8 +3,16 @@ ARG UCS_VERSION=521
 
 FROM gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-dev-${UCS_VERSION}:${UCS_BASE_IMAGE_TAG}
 
+# NOTE: If you have a branch in git called "your/branch", then it will be
+# called "your-branch" in the call to "ucs-dev-add-branch.sh" below.
+#
+# You can find the generated name in the output of the pipeline job which does
+# build the debian package.
+#
+# Replace "5-2-2" with the slug of the branch which you want to use.
+
 # hadolint ignore=DL3008
-RUN ucs-dev-add-branch.sh 5-2-1 \
+RUN ucs-dev-add-branch.sh 5-2-2 \
     && apt-get update \
     && apt-get --assume-yes --verbose-versions --no-install-recommends install \
       python3-univention-config-registry \
