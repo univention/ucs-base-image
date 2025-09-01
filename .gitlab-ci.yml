@@ -88,7 +88,7 @@ container-build:
         UCS_VERSION:
           - 521
           - 522
-        APT_REPOSITORY: "http://updates-test.software-univention.de/"
+        APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "dev"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
 
