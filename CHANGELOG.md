@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.1](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.19.0...v0.19.1) (2025-09-05)
+
+
+### Bug Fixes
+
+* Correct repository for "ucs-base-dev" ([ae62aea](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/ae62aea1c2d7423620cadd1234784dc5da304ef4)), closes [univention/dev/internal/team-nubus#1385](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1385)
+
 ## [0.19.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.18.2...v0.19.0) (2025-07-14)
 
 
