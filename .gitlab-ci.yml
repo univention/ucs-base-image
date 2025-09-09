@@ -45,6 +45,7 @@ variables:
       - 5010
       - 521
       - 522
+      - 523
 
 container-build:
   # The GitLab runner mounts the Docker socket into /var/run.
@@ -66,6 +67,7 @@ container-build:
         UCS_VERSION:
           - 521
           - 522
+          - 523
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
@@ -74,6 +76,7 @@ container-build:
         UCS_VERSION:
           - 521
           - 522
+          - 523
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages-and-python"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
@@ -88,6 +91,7 @@ container-build:
         UCS_VERSION:
           - 521
           - 522
+          - 523
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "dev"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
@@ -103,6 +107,7 @@ container-build:
         UCS_VERSION:
           - 521
           - 522
+          - 523
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
@@ -124,7 +129,7 @@ container-add-date-based-tags:
     - if: $TEST_DATE_BASED_TAGGING == "true"
   variables:
     GIT_STRATEGY: none
-    UCS_VERSIONS: 5010 521 522
+    UCS_VERSIONS: 5010 521 522 523
   script:
     - |
       get_ucs_semver() {
@@ -135,6 +140,8 @@ container-add-date-based-tags:
           echo "5.2.1"
         elif [ "$ucs_version" = "522" ]; then
           echo "5.2.2"
+        elif [ "$ucs_version" = "523" ]; then
+          echo "5.2.3"
         else
           echo "$ucs_version" # Fallback for unknown versions
         fi
@@ -170,7 +177,7 @@ container-add-date-based-tags:
         tag_image_flex "ucs-base-flex" "$ucs_version"
       done
 
-      for ucs_version in 521 522; do
+      for ucs_version in 521 522 523; do
         tag_image "ucs-base-python" "$ucs_version"
       done
 
@@ -187,12 +194,14 @@ test-ucs-base-usage-example:
           - 5010
           - 521
           - 522
+          - 523
       - IMAGE_BASENAME: "ucs-base-dev"
         DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
         UCS_VERSION:
           - 5010
           - 521
           - 522
+          - 523
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
@@ -214,6 +223,7 @@ mirror-release:
           - 5010
           - 521
           - 522
+          - 523
   script:
     - |
       set -eu
