@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.2](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.19.1...v0.19.2) (2025-09-23)
+
+
+### Bug Fixes
+
+* Do not use cache during builds ([fa54dcb](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/fa54dcb77278238f91ab7bb9717583ea875d7ddb)), closes [univention/dev/internal/team-nubus#1440](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1440)
+
 ## [0.19.1](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.19.0...v0.19.1) (2025-09-05)
 
 
