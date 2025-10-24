@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.19.2...v0.20.0) (2025-10-24)
+
+
+### Features
+
+* Add ucs-base preset for Renovate ([9bbbd39](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/9bbbd392d2f1f806731f007ee17591a57a298956)), closes [univention/dev/nubus#2](https://git.knut.univention.de/univention/dev/nubus/issues/2)
+
 ## [0.19.2](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.19.1...v0.19.2) (2025-09-23)
 
 
