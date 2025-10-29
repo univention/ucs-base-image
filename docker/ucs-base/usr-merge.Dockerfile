@@ -1,123 +1,62 @@
-# Like what you see? Join us!
-# https://www.univention.com/about-us/careers/vacancies/
-#
-# Copyright 2020-2023 Univention GmbH
-#
-# https://www.univention.de/
-#
-# All rights reserved.
-#
-# The source code of this program is made available
-# under the terms of the GNU Affero General Public License version 3
-# (GNU AGPL V3) as published by the Free Software Foundation.
-#
-# Binary versions of this program provided by Univention to you as
-# well as other copyrighted, protected or trademarked materials like
-# Logos, graphics, fonts, specific documentations and configurations,
-# cryptographic keys etc. are subject to a license agreement between
-# you and Univention and not subject to the GNU AGPL V3.
-#
-# In the case you use this program under the terms of the GNU AGPL V3,
-# the program is provided in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public
-# License with the Debian GNU/Linux or Univention distribution in file
-# /usr/share/common-licenses/AGPL-3; if not, see
-# <https://www.gnu.org/licenses/>.
-#
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2020-2025 Univention GmbH
 
 ARG DOCKER_PROXY
-FROM ${DOCKER_PROXY}debian:bookworm-slim AS builder
+FROM ${DOCKER_PROXY}debian:bookworm-slim AS base
 
 # major.minor.patch with no separators
-ARG UCS_VERSION="520"
+ARG UCS_VERSION="523"
 ARG APT_REPOSITORY="https://updates-test.software-univention.de/"
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
-RUN apt-get -qq update && apt-get -q install --assume-yes --no-install-recommends debootstrap findutils
+ENV LANG=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
 
-# there is special handling for bookworm in this script, so we need to apply this to ucs52? as well
-RUN sed -e '/^work_out_debs/,/^}/s/bookworm)$/bookworm|ucs52?)/' -i /usr/share/debootstrap/scripts/debian-common
+RUN apt-get -qq update && \
+    apt-get -q install --assume-yes --no-install-recommends \
+        ca-certificates \
+        gnupg
 
-#  hadliont ignore=DL3059
-RUN debootstrap \
-    --no-check-gpg \
-    --no-check-certificate \
-    --variant='minbase' \
-    --include='univention-archive-key' \
-    "ucs${UCS_VERSION}" \
-    /work \
-    "${APT_REPOSITORY}" \
-    "/usr/share/debootstrap/scripts/bookworm"
+ADD https://updates.software-univention.de/univention-archive-key-ucs-52x.gpg /etc/apt/trusted.gpg.d/ucs-52x.gpg
+ADD https://updates.software-univention.de/univention-security.gpg /etc/apt/trusted.gpg.d/univention-security.gpg
+ADD https://updates.software-univention.de/univention-support.gpg /etc/apt/trusted.gpg.d/univention-support.gpg
 
-# NOTE: No layers are optimized below due to starting from scratch the final image
-# causing all layers to be lost before that.
+RUN chmod a+r \
+    /etc/apt/trusted.gpg.d/ucs-52x.gpg \
+    /etc/apt/trusted.gpg.d/univention-security.gpg \
+    /etc/apt/trusted.gpg.d/univention-support.gpg
 
-# Package installs happen during `docker build`, which gets restarted clean
-# after power loss and every build. This speeds up apt, specially on spinning
-# disks.
-RUN echo 'force-unsafe-io' > "/work/etc/dpkg/dpkg.cfg.d/docker-apt-speedup"
+RUN echo 'APT::Sources::Use-Deb822 "1";' >> "/etc/apt/apt.conf.d/docker-clean" && \
+    echo "deb ${APT_REPOSITORY} ucs${UCS_VERSION} main" >> /etc/apt/sources.list && \
+    echo "deb-src ${APT_REPOSITORY} ucs${UCS_VERSION} main" >> /etc/apt/sources.list && \
+    echo "deb ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /etc/apt/sources.list.d/errata.list && \
+    echo "deb-src ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /etc/apt/sources.list.d/errata.list && \
+    rm -f /etc/apt/sources.list.d/debian.sources && \
+    apt-get -q --assume-yes dist-upgrade && \
+    apt-get -qq update && \
+    apt-get upgrade -y && \
+    apt-get -qq install --no-install-recommends \
+        tini \
+        && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives && \
+    apt-get remove -y     ca-certificates     gnupg   && \
+    apt-get autoremove -y && \
+    find /var '(' -name '*.deb' -o -name '*.log' -o -name '*.log.?z' -o -name '*-old' ')' -delete && \
+    mkdir /entrypoint.d
 
-# We don't need translations in docker images, since it wastes time and space.
-# If needed, remove the file and run `apt-get update` to get them.
-RUN echo 'Acquire::Languages "none";' > "/work/etc/apt/apt.conf.d/docker-no-languages"
-
-# Request the `gz` index files for smaller images.
-RUN echo 'Acquire::GzipIndexes "true";' > "/work/etc/apt/apt.conf.d/docker-gzip-indexes" && \
-    echo 'Acquire::CompressionTypes::Order:: "gz";' >> "/work/etc/apt/apt.conf.d/docker-gzip-indexes"
-
-# Remove the apt cache to make the image smaller by making the apt-get install
-# layers smaller.
-RUN \
-    echo 'DPkg::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' > "/work/etc/apt/apt.conf.d/docker-clean" && \
-    echo 'APT::Update::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' >> "/work/etc/apt/apt.conf.d/docker-clean" && \
-    echo 'APT::Install-Recommends "0";' >> "/work/etc/apt/apt.conf.d/docker-clean" && \
-    echo 'APT::Install-Suggests "0";' >> "/work/etc/apt/apt.conf.d/docker-clean" && \
-    echo 'Dir::Cache::pkgcache "";' >> "/work/etc/apt/apt.conf.d/docker-clean" && \
-    echo 'Dir::Cache::srcpkgcache "";' >> "/work/etc/apt/apt.conf.d/docker-clean"
-
-
-# apt aggressive about removing packages added when the package that sugested
-# another package is removed.
-RUN echo 'Apt::AutoRemove::SuggestsImportant "false";' > "/work/etc/apt/apt.conf.d/docker-autoremove-suggests"
-
-RUN echo "deb-src ${APT_REPOSITORY} ucs${UCS_VERSION} main" >> /work/etc/apt/sources.list && \
-    echo "deb ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list && \
-    echo "deb-src ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list
-
-RUN chroot /work apt-get -qq update
-RUN chroot /work apt-get -qq install \
-    usr-is-merged \
-    tini
-RUN chroot /work apt-get -q --assume-yes dist-upgrade
-RUN rm -rf /work/var/lib/apt/lists/* /work/var/cache/apt/archives
-RUN find /work/var '(' -name '*.deb' -o -name '*.log' -o -name '*.log.?z' -o -name '*-old' ')' -delete
-
-RUN rm -rf /work/dev; \
-    rm -rf /work/sys; \
-    rm -rf /work/proc;
-
-FROM scratch AS final
-COPY --from=builder /work /
-ENV LANG C.UTF-8
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN mkdir /entrypoint.d
 COPY entrypoint.sh /
 
 ENTRYPOINT ["tini", "--", "/entrypoint.sh"]
 CMD ["bash"]
 
 
-FROM final AS final-with-packages
+FROM base AS final-with-packages
 RUN apt-get update
 
 
-FROM final AS dev
+FROM base AS dev
 
 ARG APT_KEY_URL_DEV=http://omar.knut.univention.de/build2/git/key.pub
 
@@ -127,7 +66,7 @@ RUN chmod a+r /etc/apt/trusted.gpg.d/development-key-omar.gpg
 
 COPY ucs-dev-add-branch.sh /usr/local/bin/
 
-FROM final-with-packages as final-with-packages-and-python
+FROM final-with-packages AS final-with-packages-and-python
 
 # We need to keep the package lists to allow reproducible builds downstream
 RUN apt-get --assume-yes --verbose-versions --no-install-recommends install python3
