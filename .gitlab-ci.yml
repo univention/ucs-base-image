@@ -135,7 +135,7 @@ container-add-date-based-tags:
     - if: $TEST_DATE_BASED_TAGGING == "true"
   variables:
     GIT_STRATEGY: none
-    UCS_VERSIONS: 5010 521 522 523
+    UCS_VERSIONS: 5010 521 522 523 524
   script:
     - |
       get_ucs_semver() {
