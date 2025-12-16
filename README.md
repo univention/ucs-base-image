@@ -40,7 +40,6 @@ Be aware that the base containers do include the errata releases as well by
 default. This means that your images will potentially change if they are built
 again in the future. The date-based tagging helps to mitigate this by providing a stable tag for a specific build.
 
-
 ## Provided images
 
 - `ucs-base-${UCS_VERSION}` allows to install published Univention packages.
