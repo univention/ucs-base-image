@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.20.0...v0.21.0) (2025-12-16)
+
+
+### Features
+
+* trigger release ([ff2fc8e](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/ff2fc8e12f70d39399cdad05b3900a595f940549)), closes [#0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/issues/0)
+
 ## [0.20.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.19.2...v0.20.0) (2025-10-24)
 
 
