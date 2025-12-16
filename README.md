@@ -23,7 +23,7 @@ The images are tagged according to the following patterns:
 
 Where:
 - `<image-name>` can be `ucs-base`, `ucs-base-flex`, or `ucs-base-python`.
-- `<UCS-version>` is the version of the underlying UCS distribution (e.g., `5.0.10`, `5.2.1`, `5.2.2`).
+- `<UCS-version>` is the version of the underlying UCS distribution (e.g., `5.0.10`, `5.2.1`, `5.2.2`, `5.2.4`).
 - `<build-date>` is the date identifier when the image was built (e.g., `20250709`).
 
 Example tags:
