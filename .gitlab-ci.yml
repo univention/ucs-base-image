@@ -15,6 +15,13 @@ include:
       - "jobs/container-build.yaml"
       - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
+  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man-single@06a12eb931cab5452551eba44e4f6010c3092338"
+    inputs:
+      parallelism: 1
+      image: "gitregistry.knut.univention.de/univention/dev/tooling/vulnerability-management/vul-man:0.18.0-pre-idelgado-new-command-import-single-container-image@sha256:4529e556a33c8ba2e7957e201c835214c5457c89"
+      container_image: "gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-524:latest"
+      stage: "post-build"
+      dep_track_tag: "ucs-base-image"
 
 stages:
   - "prepare"
@@ -115,6 +122,11 @@ container-build:
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
       --target ${TARGET}
 
+sbon-scan-and-upload-single-image:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - when: always
 
 container-add-date-based-tags:
   stage: post-build
