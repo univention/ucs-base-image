@@ -123,7 +123,7 @@ container-build:
 
 sbon-scan-and-upload-single-image:
   needs:
-    - job: container-build
+    - container-build
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
@@ -218,9 +218,10 @@ test-ucs-base-usage-example:
 
 mirror-release:
   stage: "publish"
-  needs:
-    - job: container-build
   image: "${RUNNER_REGISTRY_IMAGE}:${RUNNER_IMAGE_TAG}"
+  needs:
+    - container-build
+    - pre-semantic-release
   variables:
     RUNNER_REGISTRY_IMAGE: "gitregistry.knut.univention.de/univention/infrastructure/ci-images/gitlab-utils/gitlab-utils"
     RUNNER_IMAGE_TAG: "latest"
