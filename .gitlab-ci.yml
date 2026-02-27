@@ -44,6 +44,8 @@ variables:
       - "true"
       - "false"
 
+
+
 .post-build-matrix: &post-build-matrix
   - IMAGE_BASENAME:
       - "ucs-base"
@@ -51,6 +53,34 @@ variables:
       - 5010
       - 523
       - 524
+
+find-latest-errata:
+  stage: prepare
+  script:
+    - apt-get update && apt-get install --yes curl jq
+    - |
+      ERRATA_JSON=$(curl --fail --silent --show-error --retry 3 --retry-delay 5 \
+      --retry-connrefused --max-time 30 --connect-timeout 10 \
+      -H "Accept: application/json" --compressed \
+      "https://errata.software-univention.de/errata-5.2.json")
+
+      UCS_RELEASE=5.2-4
+
+      ERRATA_LEVEL=$(echo "$ERRATA_JSON" | jq --arg rel "$UCS_RELEASE" \
+        '[.[] | select(.releases[] == $rel) | .number] | max')
+
+      if [ "$ERRATA_LEVEL" = "null" ] || [ -z "$ERRATA_LEVEL" ]; then
+        echo "ERROR: Could not determine errata level for $UCS_RELEASE" >&2
+        exit 1
+      fi
+
+      echo "ERRATA_LEVEL_524=$ERRATA_LEVEL" >> errata.env
+      cat errata.env
+
+  artifacts:
+    reports:
+      dotenv: errata.env
+
 
 container-build:
   # The GitLab runner mounts the Docker socket into /var/run.
@@ -84,7 +114,6 @@ container-build:
       #  APT_REPOSITORY: "http://updates.software-univention.de/"
       #  TARGET: "final-with-packages-and-python"
       #  DOCKERFILE_PATH: "usr-merge.Dockerfile"
-      #  ERRATA_LEVEL: "$ERRATA_LEVEL_524"
 
       #- IMAGE_BASENAME: "ucs-base-dev"
       #  UCS_VERSION:
@@ -121,6 +150,7 @@ container-build:
       --cache=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
+      --build-arg ERRATA_LEVEL=${ERRATA_LEVEL}
       --target ${TARGET}
 
 sbon-scan-and-upload-single-image:

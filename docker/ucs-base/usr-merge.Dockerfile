@@ -114,10 +114,17 @@ CMD ["bash"]
 
 
 FROM final AS final-with-packages
+ARG ERRATA_LEVEL="0"
+
+LABEL org.opencontainers.image.authors="Univention GmbH"
+LABEL org.opencontainers.image.url="https://www.univention.de/"
+LABEL org.opencontainers.image.documentation="https://docs.software-univention.de/n/en/index.html"
+LABEL com.univention.errata-level="$ERRATA_LEVEL"
 RUN apt-get update
 
 
 FROM final AS dev
+
 
 ARG APT_KEY_URL_DEV=http://omar.knut.univention.de/build2/git/key.pub
 
