@@ -62,56 +62,58 @@ container-build:
     - "rm -rf /var/run"
   parallel:
     matrix:
-      - IMAGE_BASENAME: "ucs-base"
-        UCS_VERSION:
-          - 5010
-        APT_REPOSITORY: "http://updates.software-univention.de/"
-        TARGET: "final-with-packages"
+      #- IMAGE_BASENAME: "ucs-base"
+      #  UCS_VERSION:
+      #    - 5010
+      #  APT_REPOSITORY: "http://updates.software-univention.de/"
+      #  TARGET: "final-with-packages"
 
       - IMAGE_BASENAME: "ucs-base"
         UCS_VERSION:
-          - 523
+      #    - 523
           - 524
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
+        ERRATA_LEVEL: "$ERRATA_LEVEL_524"
 
-      - IMAGE_BASENAME: "ucs-base-python"
-        UCS_VERSION:
-          - 523
-          - 524
-        APT_REPOSITORY: "http://updates.software-univention.de/"
-        TARGET: "final-with-packages-and-python"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+      #- IMAGE_BASENAME: "ucs-base-python"
+      #  UCS_VERSION:
+      #    - 523
+      #    - 524
+      #  APT_REPOSITORY: "http://updates.software-univention.de/"
+      #  TARGET: "final-with-packages-and-python"
+      #  DOCKERFILE_PATH: "usr-merge.Dockerfile"
+      #  ERRATA_LEVEL: "$ERRATA_LEVEL_524"
 
-      - IMAGE_BASENAME: "ucs-base-dev"
-        UCS_VERSION:
-          - 5010
-        APT_REPOSITORY: "http://updates.software-univention.de/"
-        TARGET: "dev"
+      #- IMAGE_BASENAME: "ucs-base-dev"
+      #  UCS_VERSION:
+      #    - 5010
+      #  APT_REPOSITORY: "http://updates.software-univention.de/"
+      #  TARGET: "dev"
 
-      - IMAGE_BASENAME: "ucs-base-dev"
-        UCS_VERSION:
-          - 523
-          - 524
-        APT_REPOSITORY: "http://updates.software-univention.de/"
-        TARGET: "dev"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+      #- IMAGE_BASENAME: "ucs-base-dev"
+      #  UCS_VERSION:
+      #    - 523
+      #    - 524
+      #  APT_REPOSITORY: "http://updates.software-univention.de/"
+      #  TARGET: "dev"
+      #  DOCKERFILE_PATH: "usr-merge.Dockerfile"
 
-      - IMAGE_BASENAME: "ucs-base-flex"
-        UCS_VERSION:
-          - 5010
-        APT_REPOSITORY: "http://updates.software-univention.de/"
-        TARGET: "final"
-        DOCKERFILE_PATH: "Dockerfile"
+      #- IMAGE_BASENAME: "ucs-base-flex"
+      #  UCS_VERSION:
+      #    - 5010
+      #  APT_REPOSITORY: "http://updates.software-univention.de/"
+      #  TARGET: "final"
+      #  DOCKERFILE_PATH: "Dockerfile"
 
-      - IMAGE_BASENAME: "ucs-base-flex"
-        UCS_VERSION:
-          - 523
-          - 524
-        APT_REPOSITORY: "http://updates.software-univention.de/"
-        TARGET: "final"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+      #- IMAGE_BASENAME: "ucs-base-flex"
+      #  UCS_VERSION:
+      #    - 523
+      #    - 524
+      #  APT_REPOSITORY: "http://updates.software-univention.de/"
+      #  TARGET: "final"
+      #  DOCKERFILE_PATH: "usr-merge.Dockerfile"
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
