@@ -1,4 +1,4 @@
-ARG UCS_BASE_IMAGE_TAG=0.17.3-build-2025-05-11
+ARG UCS_BASE_IMAGE_TAG=0.18.0-build-2025-05-11@sha256:8f362ee5c7e89249ce6afa5573b31a41c4e43bd0b391e12284408833b75e637b
 ARG UCS_VERSION=521
 
 FROM gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-${UCS_VERSION}:${UCS_BASE_IMAGE_TAG}
