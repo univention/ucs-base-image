@@ -33,8 +33,14 @@ stages:
   - "deploy"
   - "lint"
 
+# when adding or removing UCS versions ensure they are updated in
+#   variable UCS_VERSIONS
+#   YAML anchors .build-ucs-versions-50, .build-ucs-versions-52 and .ucs-versions
+#   get_ucs_semver function
+
 variables:
   EXTERNAL_REGISTRY: "docker.software-univention.de"
+  UCS_VERSIONS: "5010 524 525"
   TEST_DATE_BASED_TAGGING:
     description: >-
       Set to "true" in order to run the date based tagging job on a branch.
@@ -44,13 +50,24 @@ variables:
       - "true"
       - "false"
 
+# used for the container-build jobs
+.build-ucs-versions-50: &ucs-versions-50
+  - 5010
+
+# used for the container-build jobs
+.build-ucs-versions-52: &ucs-versions-52
+  - 524
+  - 525
+
+.ucs-versions: &ucs-versions
+  - 5010
+  - 524
+  - 525
+
 .post-build-matrix: &post-build-matrix
   - IMAGE_BASENAME:
       - "ucs-base"
-    UCS_VERSION:
-      - 5010
-      - 523
-      - 524
+    UCS_VERSION: *ucs-versions
 
 container-build:
   # The GitLab runner mounts the Docker socket into /var/run.
@@ -63,52 +80,41 @@ container-build:
   parallel:
     matrix:
       - IMAGE_BASENAME: "ucs-base"
-        UCS_VERSION:
-          - 5010
+        UCS_VERSION: *ucs-versions-50
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages"
 
       - IMAGE_BASENAME: "ucs-base"
-        UCS_VERSION:
-          - 523
-          - 524
+        UCS_VERSION: *ucs-versions-52
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-python"
-        UCS_VERSION:
-          - 523
-          - 524
+        UCS_VERSION: *ucs-versions-52
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages-and-python"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-dev"
-        UCS_VERSION:
-          - 5010
+        UCS_VERSION: *ucs-versions-50
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "dev"
 
       - IMAGE_BASENAME: "ucs-base-dev"
-        UCS_VERSION:
-          - 523
-          - 524
+        UCS_VERSION: *ucs-versions-52
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "dev"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-flex"
-        UCS_VERSION:
-          - 5010
+        UCS_VERSION: *ucs-versions-50
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final"
         DOCKERFILE_PATH: "Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-flex"
-        UCS_VERSION:
-          - 523
-          - 524
+        UCS_VERSION: *ucs-versions-52
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
@@ -138,17 +144,16 @@ container-add-date-based-tags:
     - if: $TEST_DATE_BASED_TAGGING == "true"
   variables:
     GIT_STRATEGY: none
-    UCS_VERSIONS: 5010 523 524
   script:
     - |
       get_ucs_semver() {
         local ucs_version=$1
         if [ "$ucs_version" = "5010" ]; then
           echo "5.0.10"
-        elif [ "$ucs_version" = "523" ]; then
-          echo "5.2.3"
         elif [ "$ucs_version" = "524" ]; then
           echo "5.2.4"
+        elif [ "$ucs_version" = "525" ]; then
+          echo "5.2.5"
         else
           echo "$ucs_version" # Fallback for unknown versions
         fi
@@ -197,16 +202,10 @@ test-ucs-base-usage-example:
     matrix:
       - IMAGE_BASENAME: "ucs-base"
         DOCKERFILE_PATH: "Dockerfile.usage-example"
-        UCS_VERSION:
-          - 5010
-          - 523
-          - 524
+        UCS_VERSION: *ucs-versions
       - IMAGE_BASENAME: "ucs-base-dev"
         DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
-        UCS_VERSION:
-          - 5010
-          - 523
-          - 524
+        UCS_VERSION: *ucs-versions
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
@@ -227,10 +226,7 @@ mirror-release:
     RUNNER_IMAGE_TAG: "latest"
   parallel:
     matrix:
-      - UCS_VERSION:
-          - 5010
-          - 523
-          - 524
+      - UCS_VERSION: *ucs-versions
   script:
     - |
       set -eu
