@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.2](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.21.1...v0.21.2) (2026-03-26)
+
+
+### Bug Fixes
+
+* add 5.2-5 to ucs-base-python date based tag ([13fc073](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/13fc07382742d3e0f74f7e0bf6c8b9e025e286cf)), closes [#0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/issues/0)
+
 ## [0.21.1](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.21.0...v0.21.1) (2025-12-16)
 
 
