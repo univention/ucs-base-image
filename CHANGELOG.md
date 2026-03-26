@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.3](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.21.2...v0.21.3) (2026-03-26)
+
+
+### Bug Fixes
+
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-521 Docker tag to v0.18.0 ([14d3c60](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/14d3c60e56fdc40be4dc9d46aaab706b4b2cc961)), closes [#0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/issues/0)
+
 ## [0.21.2](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.21.1...v0.21.2) (2026-03-26)
 
 
