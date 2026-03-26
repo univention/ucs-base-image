@@ -41,6 +41,7 @@ stages:
 variables:
   EXTERNAL_REGISTRY: "docker.software-univention.de"
   UCS_VERSIONS: "5010 524 525"
+  UCS_VERSIONS_52: "524 525"
   TEST_DATE_BASED_TAGGING:
     description: >-
       Set to "true" in order to run the date based tagging job on a branch.
@@ -189,7 +190,7 @@ container-add-date-based-tags:
         tag_image_flex "ucs-base-flex" "$ucs_version"
       done
 
-      for ucs_version in 523 524; do
+      for ucs_version in $UCS_VERSIONS_52; do
         tag_image "ucs-base-python" "$ucs_version"
       done
 
