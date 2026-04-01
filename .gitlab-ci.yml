@@ -21,6 +21,9 @@ include:
       container_image: "gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-524:latest"
       stage: "post-build"
       dep_track_tag: "ucs-base-image"
+  - component: $CI_SERVER_FQDN/univention/dev/tooling/sonarqube-ci/sonarqube@v0.0.3
+    inputs:
+      stage: "lint"
 
 stages:
   - "prepare"
