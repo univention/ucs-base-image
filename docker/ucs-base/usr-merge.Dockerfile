@@ -30,6 +30,7 @@
 #
 
 ARG DOCKER_PROXY
+ARG ERRATA_LEVEL
 FROM ${DOCKER_PROXY}debian:bookworm-slim AS builder
 
 # major.minor.patch with no separators
@@ -105,6 +106,8 @@ FROM scratch AS final
 COPY --from=builder /work /
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
+
+LABEL com.univention.errata-level="${ERRATA_LEVEL}"
 
 RUN mkdir /entrypoint.d
 COPY entrypoint.sh /

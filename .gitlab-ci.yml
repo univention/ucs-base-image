@@ -70,14 +70,56 @@ variables:
       - "ucs-base"
     UCS_VERSION: *ucs-versions
 
+find-latest-errata:
+  stage: prepare
+  image: "debian:bookworm-slim"
+  script:
+    - apt-get -qq update && apt-get -q install --assume-yes --no-install-recommends ca-certificates curl jq
+    - |
+      fetch_errata_level() {
+        local ucs_release=$1
+        local errata_json_url=$2
+        local errata_json
+        errata_json=$(curl --fail --silent --show-error --retry 3 --retry-delay 5 \
+          --retry-connrefused --max-time 30 --connect-timeout 10 \
+          -H "Accept: application/json" --compressed \
+          "${errata_json_url}")
+
+        local level
+        level=$(echo "${errata_json}" | jq --arg rel "${ucs_release}" \
+          '[.[] | select(.releases[] == $rel) | .number] | max')
+
+        if [ "${level}" = "null" ] || [ -z "${level}" ]; then
+          echo "ERROR: Could not determine errata level for ${ucs_release}" >&2
+          exit 1
+        fi
+
+        echo "${level}"
+      }
+
+      ERRATA_LEVEL_524=$(fetch_errata_level "5.2-4" "https://errata.software-univention.de/errata-5.2.json")
+      ERRATA_LEVEL_525=$(fetch_errata_level "5.2-5" "https://errata.software-univention.de/errata-5.2.json")
+
+      echo "ERRATA_LEVEL_524=${ERRATA_LEVEL_524}" >> errata.env
+      echo "ERRATA_LEVEL_525=${ERRATA_LEVEL_525}" >> errata.env
+      cat errata.env
+  artifacts:
+    reports:
+      dotenv: errata.env
+
 container-build:
   # The GitLab runner mounts the Docker socket into /var/run.
   # Kaniko either ignores /var/run (default), or the socket ends up in the tarball.
   # We unmount the socket here, and later use `--ignore-var-run=false` to have a
   # regular /var/run directory in the final image.
+  needs:
+    - find-latest-errata
+    - pre-semantic-release
   before_script:
     - "umount /var/run/docker.sock"
     - "rm -rf /var/run"
+    - "printenv | grep ERRATA_LEVEL_"
+    - "printenv"
   parallel:
     matrix:
       - IMAGE_BASENAME: "ucs-base"
@@ -126,6 +168,7 @@ container-build:
       --cache=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
+      --build-arg ERRATA_LEVEL=${ERRATA_LEVEL_${UCS_VERSION}}
       --target ${TARGET}
 
 sbon-scan-and-upload-single-image:
