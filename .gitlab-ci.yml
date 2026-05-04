@@ -18,7 +18,7 @@ include:
   - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man-single@v1.57.0"
     inputs:
       parallelism: 1
-      container_image: "gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-524:latest"
+      container_image: "gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-525:latest"
       stage: "post-build"
       dep_track_tag: "ucs-base-image"
 
