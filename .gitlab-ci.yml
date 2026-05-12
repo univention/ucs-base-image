@@ -70,6 +70,15 @@ variables:
       - "ucs-base"
     UCS_VERSION: *ucs-versions
 
+find-latest-errata:
+  stage: prepare
+  script:
+    - apt-get -qq update && apt-get -q install --assume-yes --no-install-recommends ca-certificates curl python3
+    - sh docker/ucs-base/find-latest-errata.sh ${UCS_VERSIONS}
+  artifacts:
+    reports:
+      dotenv: errata.env
+
 container-build:
   # The GitLab runner mounts the Docker socket into /var/run.
   # Kaniko either ignores /var/run (default), or the socket ends up in the tarball.
@@ -126,6 +135,7 @@ container-build:
       --cache=false
       --build-arg UCS_VERSION=${UCS_VERSION}
       --build-arg APT_REPOSITORY=${APT_REPOSITORY}
+      --build-arg ERRATA_LEVEL=${ERRATA_LEVEL_${UCS_VERSION}}
       --target ${TARGET}
 
 sbon-scan-and-upload-single-image:

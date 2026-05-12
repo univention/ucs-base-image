@@ -106,6 +106,13 @@ COPY --from=builder /work /
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
+ARG ERRATA_LEVEL="0"
+
+LABEL org.opencontainers.image.authors="Univention GmbH" \
+      org.opencontainers.image.url="https://www.univention.de/" \
+      org.opencontainers.image.documentation="https://docs.software-univention.de/n/en/index.html" \
+      com.univention.errata-level="$ERRATA_LEVEL"
+
 RUN mkdir /entrypoint.d
 COPY entrypoint.sh /
 
