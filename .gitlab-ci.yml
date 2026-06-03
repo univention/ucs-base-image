@@ -35,13 +35,15 @@ stages:
 
 # when adding or removing UCS versions ensure they are updated in
 #   variable UCS_VERSIONS
-#   YAML anchors .build-ucs-versions-50, .build-ucs-versions-52 and .ucs-versions
+#   YAML anchors .build-ucs-versions-50, .build-ucs-versions-52,
+#     .build-ucs-versions-53 and .ucs-versions
 #   get_ucs_semver function
 
 variables:
   EXTERNAL_REGISTRY: "docker.software-univention.de"
-  UCS_VERSIONS: "5010 524 525"
+  UCS_VERSIONS: "5010 524 525 530"
   UCS_VERSIONS_52: "524 525"
+  UCS_VERSIONS_53: "530"
   TEST_DATE_BASED_TAGGING:
     description: >-
       Set to "true" in order to run the date based tagging job on a branch.
@@ -60,10 +62,15 @@ variables:
   - 524
   - 525
 
+# used for the container-build jobs
+.build-ucs-versions-53: &ucs-versions-53
+  - 530
+
 .ucs-versions: &ucs-versions
   - 5010
   - 524
   - 525
+  - 530
 
 .post-build-matrix: &post-build-matrix
   - IMAGE_BASENAME:
@@ -100,9 +107,22 @@ container-build:
         TARGET: "final-with-packages"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
 
+      # 5.3 is not yet released; build against the test mirror.
+      - IMAGE_BASENAME: "ucs-base"
+        UCS_VERSION: *ucs-versions-53
+        APT_REPOSITORY: "https://updates-test.software-univention.de/"
+        TARGET: "final-with-packages"
+        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+
       - IMAGE_BASENAME: "ucs-base-python"
         UCS_VERSION: *ucs-versions-52
         APT_REPOSITORY: "http://updates.software-univention.de/"
+        TARGET: "final-with-packages-and-python"
+        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+
+      - IMAGE_BASENAME: "ucs-base-python"
+        UCS_VERSION: *ucs-versions-53
+        APT_REPOSITORY: "https://updates-test.software-univention.de/"
         TARGET: "final-with-packages-and-python"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
 
@@ -117,6 +137,12 @@ container-build:
         TARGET: "dev"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
 
+      - IMAGE_BASENAME: "ucs-base-dev"
+        UCS_VERSION: *ucs-versions-53
+        APT_REPOSITORY: "https://updates-test.software-univention.de/"
+        TARGET: "dev"
+        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+
       - IMAGE_BASENAME: "ucs-base-flex"
         UCS_VERSION: *ucs-versions-50
         APT_REPOSITORY: "http://updates.software-univention.de/"
@@ -126,6 +152,12 @@ container-build:
       - IMAGE_BASENAME: "ucs-base-flex"
         UCS_VERSION: *ucs-versions-52
         APT_REPOSITORY: "http://updates.software-univention.de/"
+        TARGET: "final"
+        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+
+      - IMAGE_BASENAME: "ucs-base-flex"
+        UCS_VERSION: *ucs-versions-53
+        APT_REPOSITORY: "https://updates-test.software-univention.de/"
         TARGET: "final"
         DOCKERFILE_PATH: "usr-merge.Dockerfile"
   variables:
@@ -165,6 +197,8 @@ container-add-date-based-tags:
           echo "5.2.4"
         elif [ "$ucs_version" = "525" ]; then
           echo "5.2.5"
+        elif [ "$ucs_version" = "530" ]; then
+          echo "5.3.0"
         else
           echo "$ucs_version" # Fallback for unknown versions
         fi
@@ -200,7 +234,7 @@ container-add-date-based-tags:
         tag_image_flex "ucs-base-flex" "$ucs_version"
       done
 
-      for ucs_version in $UCS_VERSIONS_52; do
+      for ucs_version in $UCS_VERSIONS_52 $UCS_VERSIONS_53; do
         tag_image "ucs-base-python" "$ucs_version"
       done
 
