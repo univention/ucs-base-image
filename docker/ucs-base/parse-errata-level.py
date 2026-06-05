@@ -3,7 +3,8 @@
 # SPDX-FileCopyrightText: 2026 Univention GmbH
 #
 # Reads errata JSON from stdin and prints the highest advisory number
-# for the release passed as the first argument.
+# for the release passed as the first argument. If no advisories exist yet
+# for the release, prints 0.
 #
 # Usage: curl ... | python3 parse-errata-level.py <ucs_release>
 # Example: curl ... | python3 parse-errata-level.py 5.2-5
@@ -32,7 +33,12 @@ numbers = [
 ]
 
 if not numbers:
-    print(f"ERROR: No advisories found for release {ucs_release}", file=sys.stderr)
-    sys.exit(1)
+    # No errata published yet for this release; the errata level is 0.
+    print(
+        f"No advisories found for release {ucs_release}; defaulting to 0",
+        file=sys.stderr,
+    )
+    print(0)
+    sys.exit(0)
 
 print(max(numbers))

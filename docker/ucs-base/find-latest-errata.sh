@@ -40,10 +40,28 @@ ucs_version_to_major_minor() {
 fetch_errata_level() {
     ucs_release="$1"
     errata_json_url="$2"
-    level=$(curl --fail --silent --show-error --retry 3 --retry-delay 5 \
+
+    errata_json=$(mktemp)
+    http_status=$(curl --silent --show-error --retry 3 --retry-delay 5 \
         --retry-connrefused --max-time 30 --connect-timeout 10 \
-        --compressed \
-        "${errata_json_url}" | python3 "$(dirname "$0")/parse-errata-level.py" "${ucs_release}")
+        --compressed --output "${errata_json}" --write-out '%{http_code}' \
+        "${errata_json_url}") || true
+
+    if [ "${http_status}" = "404" ]; then
+        echo "No errata published yet for ${ucs_release} (${errata_json_url} returned 404); defaulting to 0" >&2
+        rm -f "${errata_json}"
+        echo "0"
+        return 0
+    fi
+
+    if [ "${http_status}" != "200" ]; then
+        echo "ERROR: Unexpected HTTP status ${http_status} fetching ${errata_json_url}" >&2
+        rm -f "${errata_json}"
+        exit 1
+    fi
+
+    level=$(python3 "$(dirname "$0")/parse-errata-level.py" "${ucs_release}" < "${errata_json}")
+    rm -f "${errata_json}"
 
     if [ "${level}" = "null" ] || [ -z "${level}" ]; then
         echo "ERROR: Could not determine errata level for ${ucs_release}" >&2
