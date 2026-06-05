@@ -248,9 +248,17 @@ test-ucs-base-usage-example:
       - IMAGE_BASENAME: "ucs-base"
         DOCKERFILE_PATH: "Dockerfile.usage-example"
         UCS_VERSION: *ucs-versions
+      # TODO: re-add 530 once the build2/git dev repo is re-signed with a
+      # modern key. UCS 5.3 is trixie-based and its apt (Sequoia/sqv) rejects
+      # the DSA-2048 signing key on http://omar.knut.univention.de/build2/git,
+      # which breaks dev.Dockerfile.usage-example (ucs-dev-add-branch.sh).
+      # 5.0/5.2 (bookworm) still accept the key, so they stay enabled.
       - IMAGE_BASENAME: "ucs-base-dev"
         DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
-        UCS_VERSION: *ucs-versions
+        UCS_VERSION:
+          - 5010
+          - 524
+          - 525
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
