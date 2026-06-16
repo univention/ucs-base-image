@@ -38,11 +38,12 @@ stages:
 #   YAML anchors .build-ucs-versions-50, .build-ucs-versions-52,
 #     .build-ucs-versions-53 and .ucs-versions
 #   get_ucs_semver function
+#   UCS_VERSIONS list in job test-ucs-base-usage-example
 
 variables:
   EXTERNAL_REGISTRY: "docker.software-univention.de"
-  UCS_VERSIONS: "5010 524 525 530"
-  UCS_VERSIONS_52: "524 525"
+  UCS_VERSIONS: "5010 525 526 530"
+  UCS_VERSIONS_52: "525 526"
   UCS_VERSIONS_53: "530"
   TEST_DATE_BASED_TAGGING:
     description: >-
@@ -59,8 +60,8 @@ variables:
 
 # used for the container-build jobs
 .build-ucs-versions-52: &ucs-versions-52
-  - 524
   - 525
+  - 526
 
 # used for the container-build jobs
 .build-ucs-versions-53: &ucs-versions-53
@@ -68,8 +69,8 @@ variables:
 
 .ucs-versions: &ucs-versions
   - 5010
-  - 524
   - 525
+  - 526
   - 530
 
 .post-build-matrix: &post-build-matrix
@@ -193,10 +194,10 @@ container-add-date-based-tags:
         local ucs_version=$1
         if [ "$ucs_version" = "5010" ]; then
           echo "5.0.10"
-        elif [ "$ucs_version" = "524" ]; then
-          echo "5.2.4"
         elif [ "$ucs_version" = "525" ]; then
           echo "5.2.5"
+        elif [ "$ucs_version" = "526" ]; then
+          echo "5.2.6"
         elif [ "$ucs_version" = "530" ]; then
           echo "5.3.0"
         else
@@ -257,8 +258,8 @@ test-ucs-base-usage-example:
         DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
         UCS_VERSION:
           - 5010
-          - 524
           - 525
+          - 526
   variables:
     KANIKO_BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
