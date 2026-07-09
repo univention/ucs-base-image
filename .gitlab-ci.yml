@@ -22,6 +22,10 @@ include:
       stage: "post-build"
       dep_track_tag: "ucs-base-image"
 
+default:
+  tags:
+    - "dae-s"
+
 stages:
   - "prepare"
   - "build"
