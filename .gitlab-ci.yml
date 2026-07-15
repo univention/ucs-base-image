@@ -9,10 +9,10 @@ include:
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
-      - "templates/kaniko.yaml"
+      - "templates/buildkit.yaml"
       - "templates/harbor.yaml"
       - "jobs/semantic-release-env.yaml"
-      - "jobs/container-build.yaml"
+      - "jobs/container-build-buildkit.yaml"
       - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
   - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man-single@v1.57.0"
@@ -88,13 +88,6 @@ find-latest-errata:
       dotenv: errata.env
 
 container-build:
-  # The GitLab runner mounts the Docker socket into /var/run.
-  # Kaniko either ignores /var/run (default), or the socket ends up in the tarball.
-  # We unmount the socket here, and later use `--ignore-var-run=false` to have a
-  # regular /var/run directory in the final image.
-  before_script:
-    - "umount /var/run/docker.sock"
-    - "rm -rf /var/run"
   parallel:
     matrix:
       - IMAGE_BASENAME: "ucs-base"
@@ -106,26 +99,26 @@ container-build:
         UCS_VERSION: *ucs-versions-52
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+        DOCKERFILE_PATH: "docker/ucs-base/usr-merge.Dockerfile"
 
       # 5.3 is not yet released; build against the test mirror.
       - IMAGE_BASENAME: "ucs-base"
         UCS_VERSION: *ucs-versions-53
         APT_REPOSITORY: "https://updates-test.software-univention.de/"
         TARGET: "final-with-packages"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+        DOCKERFILE_PATH: "docker/ucs-base/usr-merge.Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-python"
         UCS_VERSION: *ucs-versions-52
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final-with-packages-and-python"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+        DOCKERFILE_PATH: "docker/ucs-base/usr-merge.Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-python"
         UCS_VERSION: *ucs-versions-53
         APT_REPOSITORY: "https://updates-test.software-univention.de/"
         TARGET: "final-with-packages-and-python"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+        DOCKERFILE_PATH: "docker/ucs-base/usr-merge.Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-dev"
         UCS_VERSION: *ucs-versions-50
@@ -136,40 +129,38 @@ container-build:
         UCS_VERSION: *ucs-versions-52
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "dev"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+        DOCKERFILE_PATH: "docker/ucs-base/usr-merge.Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-dev"
         UCS_VERSION: *ucs-versions-53
         APT_REPOSITORY: "https://updates-test.software-univention.de/"
         TARGET: "dev"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+        DOCKERFILE_PATH: "docker/ucs-base/usr-merge.Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-flex"
         UCS_VERSION: *ucs-versions-50
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final"
-        DOCKERFILE_PATH: "Dockerfile"
+        DOCKERFILE_PATH: "docker/ucs-base/Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-flex"
         UCS_VERSION: *ucs-versions-52
         APT_REPOSITORY: "http://updates.software-univention.de/"
         TARGET: "final"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+        DOCKERFILE_PATH: "docker/ucs-base/usr-merge.Dockerfile"
 
       - IMAGE_BASENAME: "ucs-base-flex"
         UCS_VERSION: *ucs-versions-53
         APT_REPOSITORY: "https://updates-test.software-univention.de/"
         TARGET: "final"
-        DOCKERFILE_PATH: "usr-merge.Dockerfile"
+        DOCKERFILE_PATH: "docker/ucs-base/usr-merge.Dockerfile"
   variables:
-    KANIKO_BUILD_CONTEXT: "docker/ucs-base"
+    BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
-    KANIKO_ARGS: --ignore-var-run=false
-      --cache=false
-      --build-arg UCS_VERSION=${UCS_VERSION}
-      --build-arg APT_REPOSITORY=${APT_REPOSITORY}
-      --build-arg ERRATA_LEVEL=${ERRATA_LEVEL_${UCS_VERSION}}
-      --target ${TARGET}
+    BUILD_TARGET: "${TARGET}"
+    BUILD_ARGS: --opt build-arg:UCS_VERSION=${UCS_VERSION}
+      --opt build-arg:APT_REPOSITORY=${APT_REPOSITORY}
+      --opt build-arg:ERRATA_LEVEL=${ERRATA_LEVEL_${UCS_VERSION}}
 
 sbon-scan-and-upload-single-image:
   needs:
@@ -242,12 +233,12 @@ container-add-date-based-tags:
 
 test-ucs-base-usage-example:
   stage: "test"
-  extends: ".kaniko"
+  extends: ".buildkit"
   cache: null
   parallel:
     matrix:
       - IMAGE_BASENAME: "ucs-base"
-        DOCKERFILE_PATH: "Dockerfile.usage-example"
+        DOCKERFILE_PATH: "docker/ucs-base/Dockerfile.usage-example"
         UCS_VERSION: *ucs-versions
       # TODO: re-add 530 once the build2/git dev repo is re-signed with a
       # modern key. UCS 5.3 is trixie-based and its apt (Sequoia/sqv) rejects
@@ -255,19 +246,17 @@ test-ucs-base-usage-example:
       # which breaks dev.Dockerfile.usage-example (ucs-dev-add-branch.sh).
       # 5.0/5.2 (bookworm) still accept the key, so they stay enabled.
       - IMAGE_BASENAME: "ucs-base-dev"
-        DOCKERFILE_PATH: "dev.Dockerfile.usage-example"
+        DOCKERFILE_PATH: "docker/ucs-base/dev.Dockerfile.usage-example"
         UCS_VERSION:
           - 5010
           - 525
           - 526
   variables:
-    KANIKO_BUILD_CONTEXT: "docker/ucs-base"
+    BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/${IMAGE_BASENAME}-${UCS_VERSION}-usage-example"
-    KANIKO_CACHE_ARGS: ""
-    KANIKO_ARGS: --no-push
-      --build-arg UCS_BASE_IMAGE_TAG=${RELEASE_VERSION}
-      --build-arg UCS_VERSION=${UCS_VERSION}
+    BUILD_ARGS: --opt build-arg:UCS_BASE_IMAGE_TAG=${RELEASE_VERSION}
+      --opt build-arg:UCS_VERSION=${UCS_VERSION}
 
 mirror-release:
   stage: "publish"
