@@ -42,11 +42,11 @@ RUN apt-get -qq update && apt-get -q install --assume-yes --no-install-recommend
 RUN sed -e '/required=/s/ usr-is-merged//' -i /usr/share/debootstrap/scripts/debian-common
 
 #  hadliont ignore=DL3059
-RUN debootstrap \
+RUN FAKECHROOT=true debootstrap \
     --no-check-gpg \
     --no-check-certificate \
     --no-merged-usr \
-    --variant='minbase' \
+    --variant='fakechroot' \
     --include='univention-archive-key' \
     "ucs${UCS_VERSION}" \
     /work \
@@ -89,6 +89,7 @@ RUN \
     echo "deb ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list && \
     echo "deb-src ${APT_REPOSITORY} errata${UCS_VERSION} main" >> /work/etc/apt/sources.list.d/errata.list
 
+RUN mkdir -p /work/dev && : > /work/dev/null && chmod 666 /work/dev/null
 RUN chroot /work apt-get -qq update
 RUN chroot /work apt-get -q --assume-yes dist-upgrade
 RUN chroot /work apt-get -qq install tini
