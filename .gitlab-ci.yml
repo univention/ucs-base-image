@@ -252,6 +252,7 @@ test-ucs-base-usage-example:
           - 525
           - 526
   variables:
+    PUSH_IMAGE_AND_CACHE: false
     BUILD_CONTEXT: "docker/ucs-base"
     IMAGE_NAME: "${IMAGE_BASENAME}-${UCS_VERSION}"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/${IMAGE_BASENAME}-${UCS_VERSION}-usage-example"
