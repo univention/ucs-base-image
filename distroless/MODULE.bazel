@@ -1,0 +1,69 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Univention GmbH
+
+"""Distroless Python base image, built from UCS apt repositories.
+
+Not a variant of ucs-base: no shell, no apt, no dpkg.
+"""
+
+module(
+    name = "ucs_distroless_python",
+    version = "0.0.0",
+)
+
+bazel_dep(name = "rules_distroless", version = "0.8.0")
+bazel_dep(name = "rules_oci", version = "2.2.7")
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "tar.bzl", version = "0.10.7")
+
+apt = use_extension("@rules_distroless//apt:extensions.bzl", "apt")
+
+# resolve_transitive = False everywhere: the manifests list complete closures,
+# guarded by tools/check-drift.sh.
+
+apt.install(
+    name = "ucs530",
+    manifest = "//:ucs530-curated.yaml",
+    nolock = True,
+    resolve_transitive = False,
+)
+
+use_repo(apt, "ucs530")
+
+apt.install(
+    name = "ucs530_ldap",
+    manifest = "//:ucs530-ldap.yaml",
+    nolock = True,
+    resolve_transitive = False,
+)
+
+use_repo(apt, "ucs530_ldap")
+
+apt.install(
+    name = "ucs530_debug",
+    manifest = "//:ucs530-debug.yaml",
+    nolock = True,
+    resolve_transitive = False,
+)
+
+use_repo(apt, "ucs530_debug")
+
+# Separate repo so only the bundle cacerts() generates lands in the image;
+# :flat, and with it ~150 individual .crt files, is never used.
+apt.install(
+    name = "certs",
+    manifest = "//:certs.yaml",
+    nolock = True,
+    resolve_transitive = False,
+)
+
+use_repo(apt, "certs")
+
+# Transitive resolution ON, for tools/check-drift.sh. Not part of any image.
+apt.install(
+    name = "ucs530_probe",
+    manifest = "//:ucs530-probe.yaml",
+    nolock = True,
+)
+
+use_repo(apt, "ucs530_probe")
