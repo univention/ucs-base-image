@@ -15,6 +15,10 @@ include:
       - "jobs/container-build.yaml"
       - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
+  - project: "univention/infrastructure/docker-services"
+    ref: "master"
+    file:
+      - "dind.yml"
   - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man-single@v1.57.0"
     inputs:
       parallelism: 1
@@ -42,6 +46,7 @@ stages:
 
 variables:
   EXTERNAL_REGISTRY: "docker.software-univention.de"
+  DISTROLESS_BAZEL_IMAGE: "gcr.io/bazel-public/bazel:8.5.1"
   UCS_VERSIONS: "5010 525 526 530"
   UCS_VERSIONS_52: "525 526"
   UCS_VERSIONS_53: "530"
@@ -239,6 +244,12 @@ container-add-date-based-tags:
         tag_image "ucs-base-python" "$ucs_version"
       done
 
+      for ucs_version in $UCS_VERSIONS_53; do
+        tag_image "ucs-distroless-python" "$ucs_version"
+        tag_image "ucs-distroless-python-ldap" "$ucs_version"
+        tag_image "ucs-distroless-python-debug" "$ucs_version"
+      done
+
 
 test-ucs-base-usage-example:
   stage: "test"
@@ -306,5 +317,105 @@ mirror-release:
         "${PUBLIC_DOCKER_REGISTRY}/ucs-base-${UCS_VERSION}:${RELEASE_VERSION}"
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+
+# Unlike the debootstrap images above, these are built by Bazel: no kaniko, no
+# Docker daemon, no privileged runner. See distroless/README.md.
+.distroless-python:
+  image:
+    name: "${DISTROLESS_BAZEL_IMAGE}"
+    entrypoint: [""]
+  rules:
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+    - changes:
+        - "distroless/**/*"
+  cache:
+    key: "distroless-python-bazel"
+    paths:
+      - ".bazel-cache"
+  before_script:
+    - "cd distroless"
+    - "echo 'build --disk_cache=../.bazel-cache' >> .bazelrc"
+
+distroless-python-build:
+  extends: ".distroless-python"
+  stage: "build"
+  script:
+    - "bazel build //:ucs530_tarball //:ucs530_ldap_tarball //:ucs530_debug_tarball --output_groups=+tarball"
+    # bazel-bin is a symlink into the output base; copy out so the artifact is real
+    - "mkdir -p ../tarballs"
+    - "cp bazel-bin/ucs530_tarball/tarball.tar ../tarballs/ucs-distroless-python-530.tar"
+    - "cp bazel-bin/ucs530_ldap_tarball/tarball.tar ../tarballs/ucs-distroless-python-ldap-530.tar"
+    - "cp bazel-bin/ucs530_debug_tarball/tarball.tar ../tarballs/ucs-distroless-python-debug-530.tar"
+  artifacts:
+    paths:
+      - "tarballs/"
+    expire_in: "1 day"
+
+distroless-python-push:
+  extends: ".skopeo"
+  stage: "build"
+  needs:
+    - "distroless-python-build"
+    - "pre-semantic-release"
+  rules:
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+    - changes:
+        - "distroless/**/*"
+  variables:
+    GIT_STRATEGY: "none"
+  script:
+    - |
+      for variant in "" "-ldap" "-debug"; do
+        image="ucs-distroless-python${variant}-530"
+        echo "pushing ${image}:${RELEASE_VERSION}"
+        /bin/skopeo copy \
+          "docker-archive:tarballs/${image}.tar" \
+          "docker://${CI_REGISTRY_IMAGE}/${image}:${RELEASE_VERSION}"
+      done
+
+# Builds a derived image the way a service would and runs it, so a package
+# dropped from a manifest fails here rather than in a consuming project.
+distroless-python-smoke-test:
+  extends: ".dind"
+  stage: "test"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:24.0.7"
+  needs:
+    - "distroless-python-build"
+  rules:
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+    - changes:
+        - "distroless/**/*"
+  before_script:
+    # let the client negotiate the API version with the daemon
+    - "unset DOCKER_API_VERSION"
+    - "docker version"
+  script:
+    - |
+      set -eu
+      for variant in "" "-ldap" "-debug"; do
+        image="ucs-distroless-python${variant}-530"
+        echo "smoke testing ${image}"
+        tag="$(docker load -i "tarballs/${image}.tar" | sed -n 's/^Loaded image: //p')"
+        # every tarball carries the same tag and the daemon is shared with other
+        # jobs, so pin a unique tag to the ID this job just loaded
+        base="smoke-base-${CI_JOB_ID}${variant}"
+        docker tag "$(docker image inspect --format '{{.Id}}' "$tag")" "$base"
+        docker build --build-arg "BASE_IMAGE=${base}" \
+          -t "smoke-${CI_JOB_ID}${variant}" -f distroless/tests/Dockerfile.smoke distroless/tests
+        docker run --rm "smoke-${CI_JOB_ID}${variant}"
+      done
+  after_script:
+    - "docker rmi -f $(docker images -q 'smoke-*') || true"
+
+distroless-python-drift-check:
+  extends: ".distroless-python"
+  stage: "test"
+  rules:
+    - if: "$CI_PIPELINE_SOURCE == 'schedule'"
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+    - changes:
+        - "distroless/**/*"
+  script:
+    - "./tools/check-drift.sh"
 
 ...

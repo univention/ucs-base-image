@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Univention GmbH
+
+# Builds the way a service is expected to: copy a program in, set an exec-form
+# ENTRYPOINT. There is no RUN step because the base image has no shell.
+
+ARG BASE_IMAGE
+
+FROM ${BASE_IMAGE}
+
+COPY smoke.py /app/smoke.py
+
+ENTRYPOINT [ "/usr/bin/python3.13", "/app/smoke.py" ]
