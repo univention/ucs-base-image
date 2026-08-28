@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Univention GmbH
+
+version: 1
+sources:
+  - channel: ucs530 main
+    url: https://updates-test.software-univention.de/
+archs: ["amd64"]
+packages: ["ca-certificates"]

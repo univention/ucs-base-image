@@ -1,0 +1,4 @@
+# Nothing here is Java; this stops Bazel reaching for a host JDK.
+build --java_runtime_version=remotejdk_11
+
+common --experimental_repository_downloader_retries=10

@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Univention GmbH
+
+load(":base.bzl", "ucs_base")
+
+ucs_base(
+    name = "ucs530",
+    debian_codename = "trixie",
+    debian_version = "13",
+    python = "python3.13",
+    repo = "ucs530",
+)
+
+ucs_base(
+    name = "ucs530_debug",
+    debian_codename = "trixie",
+    debian_version = "13",
+    debug = True,
+    python = "python3.13",
+    repo = "ucs530_debug",
+)
+
+ucs_base(
+    name = "ucs530_ldap",
+    debian_codename = "trixie",
+    debian_version = "13",
+    python = "python3.13",
+    repo = "ucs530_ldap",
+)

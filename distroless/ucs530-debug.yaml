@@ -1,0 +1,52 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Univention GmbH
+
+# The base closure plus busybox. Complete, as it is used with
+# resolve_transitive = False.
+
+version: 1
+
+sources:
+  - channel: ucs530 main
+    url: https://updates-test.software-univention.de/
+
+archs:
+  - "amd64"
+
+packages:
+  # /etc/debian_version, which trivy needs to detect the OS at all
+  - "base-files"
+
+  # the interpreter
+  - "python3.13-minimal"
+  - "libpython3.13-minimal"
+  - "libpython3.13-stdlib"
+
+  # libc and friends
+  - "libc6"
+  - "libgcc-s1"
+  - "gcc-14-base"
+  # wheels with C++ extensions link this; without it they fall back to
+  # pure Python silently (frozenlist, via aiohttp)
+  - "libstdc++6"
+
+  # stdlib module dependencies
+  - "libexpat1"      # pyexpat  -> xml.etree, xml.sax
+  - "libffi8"        # ctypes
+  - "libsqlite3-0"   # sqlite3
+  - "libbz2-1.0"     # bz2
+  - "liblzma5"       # lzma
+  - "libzstd1"       # compression
+  - "zlib1g"         # zlib
+  - "libuuid1"       # uuid
+  - "libdb5.3t64"    # dbm
+  - "libssl3t64"     # ssl, hashlib
+  - "libreadline8t64"  # readline
+  - "libncursesw6"   # curses
+  - "libtinfo6"      # terminfo, needed by ncurses
+
+  # data files used by the stdlib
+  - "tzdata"       # zoneinfo
+  - "media-types"    # /etc/mime.types -> mimetypes
+  - "netbase"        # /etc/services, /etc/protocols -> socket
+  - "busybox-static"  # `busybox` is virtual; this provides it

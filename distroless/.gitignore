@@ -1,0 +1,5 @@
+/bazel-*
+
+# No lockfiles, see README.md. ucs530-probe.yaml is committed because
+# MODULE.bazel reads it at load time.
+/*.lock.json
