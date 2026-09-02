@@ -13,6 +13,7 @@ from __future__ import annotations
 import ctypes
 import os
 import pathlib
+import subprocess
 import sys
 
 
@@ -82,6 +83,23 @@ if not bundle or not pathlib.Path(bundle).is_file():
 
 if os.getuid() != 1000:
     failures.append(f"expected uid 1000, got {os.getuid()}")
+
+# The shell variant links every busybox applet into /bin. busybox resolves them
+# itself under its own shell, but an exec straight into the container does not.
+busybox = pathlib.Path("/bin/busybox")
+if busybox.is_file():
+    listed = subprocess.run(
+        [str(busybox), "--list"],  # noqa: S603 - literal argv, no shell
+        capture_output=True,
+        text=True,
+        check=False,
+    ).stdout.split()
+    missing = [a for a in listed if not pathlib.Path(f"/bin/{a}").exists()]
+    if missing:
+        failures.append(
+            f"{len(missing)} busybox applets have no symlink in /bin: "
+            f"{', '.join(sorted(missing)[:5])}...",
+        )
 
 if failures:
     for failure in failures:
