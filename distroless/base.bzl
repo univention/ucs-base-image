@@ -10,6 +10,7 @@ load("@rules_distroless//apt:defs.bzl", "dpkg_statusd")
 load("@rules_distroless//distroless:defs.bzl", "cacerts", "group", "os_release", "passwd")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
 load("@tar.bzl", "tar")
+load(":busybox_applets.bzl", "BUSYBOX_APPLETS")
 
 # uid, gid and name follow decision-records nubus/deployment/0007.
 UID = 1000
@@ -86,8 +87,11 @@ def ucs_base(name, repo, python, debian_version, debian_codename, debug = False)
         tar(
             name = name + "_debug_links",
             mtree = [
-                "./bin/sh type=link link=/usr/bin/busybox",
                 "./bin/busybox type=link link=/usr/bin/busybox",
+                "./bin/sh type=link link=/usr/bin/busybox",
+            ] + [
+                "./bin/%s type=link link=/usr/bin/busybox" % applet
+                for applet in BUSYBOX_APPLETS
             ],
         )
 
