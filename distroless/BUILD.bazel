@@ -12,12 +12,12 @@ ucs_base(
 )
 
 ucs_base(
-    name = "ucs530_debug",
+    name = "ucs530_shell",
     debian_codename = "trixie",
     debian_version = "13",
-    debug = True,
+    shell = True,
     python = "python3.13",
-    repo = "ucs530_debug",
+    repo = "ucs530_shell",
 )
 
 ucs_base(
