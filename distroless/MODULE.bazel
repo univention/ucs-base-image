@@ -40,13 +40,13 @@ apt.install(
 use_repo(apt, "ucs530_ldap")
 
 apt.install(
-    name = "ucs530_debug",
-    manifest = "//:ucs530-debug.yaml",
+    name = "ucs530_shell",
+    manifest = "//:ucs530-shell.yaml",
     nolock = True,
     resolve_transitive = False,
 )
 
-use_repo(apt, "ucs530_debug")
+use_repo(apt, "ucs530_shell")
 
 # Separate repo so only the bundle cacerts() generates lands in the image;
 # :flat, and with it ~150 individual .crt files, is never used.

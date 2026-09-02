@@ -17,7 +17,7 @@ it uses `python3.11` and the bookworm package names differ.
 |---|---|---|---|
 | `//:ucs530` | 25 | 55 MB | A Python service whose native extensions need nothing beyond glibc, libstdc++, and the libraries that the Python standard library links. Start here |
 | `//:ucs530_ldap` | 36 | 58 MB | A service that talks LDAP through `python-ldap`, or that authenticates with SASL or Kerberos |
-| `//:ucs530_debug` | 26 | 57 MB | Ephemeral debug containers. Adds busybox at `/bin/sh`. Never deploy it |
+| `//:ucs530_shell` | 26 | 57 MB | Components that need a shell in the container: UCS App Center apps that run in-container scripts, and `kubectl debug` |
 
 For comparison, `ucs-base-python` contains 97 packages and is 252 MB. Sizes are
 for the flattened root filesystem, which is what a node stores.
@@ -77,7 +77,7 @@ Because the image contains no shell, the following don't work:
     environment by absolute path instead, or use an `httpGet` or `tcpSocket`
     probe. Those probe types are unaffected.
 *   `kubectl exec <pod> -- sh`. To open a shell, see
-    [Debug a running pod](#debug-a-running-pod).
+    [Use the shell variant](#use-the-shell-variant).
 *   `RUN` steps in the final build stage.
 
 ### Check a service before you migrate it
@@ -110,21 +110,26 @@ If your service needs a shared library that none of the variants provide, add it
 to a manifest. For more information, see
 [Update the package list](#update-the-package-list).
 
-### Debug a running pod
+### Use the shell variant
 
-To get a shell next to a running container, start an ephemeral container that
-uses the debug variant:
+`ucs-distroless-python-shell` is the base image plus `busybox-static`, with a
+symlink in `/bin` for every busybox applet. Choose it when something has to run
+a command inside the container rather than only your service.
+
+A UCS App Center app needs it when its definition ships in-container interface
+scripts such as `configure`, `store_data` or `restore_data`. The App Center
+runs those with `docker exec`, which needs a real entry in `PATH`.
+
+It also serves as the image for an ephemeral debug container:
 
 ```bash
 kubectl debug -it POD_NAME \
-  --image=REGISTRY/ucs-distroless-python-debug-530 \
+  --image=REGISTRY/ucs-distroless-python-shell-530 \
   --target=CONTAINER_NAME
 ```
 
-The debug variant is the base image plus `busybox-static` at `/bin/sh`.
-
-**Caution:** Don't deploy the debug variant. It contains 65 known
-vulnerabilities, compared to 51 in the image that it debugs.
+**Caution:** Prefer the default image. busybox is real code, so this variant
+reports more vulnerabilities than the image it is based on.
 
 ## Develop the images
 
@@ -134,7 +139,7 @@ vulnerabilities, compared to 51 in the image that it debugs.
 |---|---|
 | `ucs530-curated.yaml` | The package list. Start here |
 | `ucs530-ldap.yaml` | The base closure, plus the native dependencies of `python-ldap` and krb5 |
-| `ucs530-debug.yaml` | The base closure, plus busybox |
+| `ucs530-shell.yaml` | The base closure, plus busybox |
 | `certs.yaml` | `ca-certificates`, used for the certificate bundle only |
 | `ucs530-probe.yaml` | A generated copy of the curated list, used by the drift check. Committed because `MODULE.bazel` reads it at load time |
 | `MODULE.bazel` | Connects the manifests to the apt repositories |

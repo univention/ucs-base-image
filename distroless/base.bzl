@@ -17,7 +17,7 @@ UID = 1000
 GID = 1000
 USERNAME = "app"
 
-def ucs_base(name, repo, python, debian_version, debian_codename, debug = False):
+def ucs_base(name, repo, python, debian_version, debian_codename, shell = False):
     """A minimal Python base image.
 
     Args:
@@ -26,8 +26,9 @@ def ucs_base(name, repo, python, debian_version, debian_codename, debug = False)
         python: interpreter binary name, for example "python3.13"
         debian_version: Debian major version, for example "13"
         debian_codename: for example "trixie"
-        debug: add /bin/sh pointing at busybox. Requires a repo whose closure
-            contains busybox-static. Never for a shipped image.
+        shell: add busybox and its applet symlinks. Requires a repo whose
+            closure contains busybox-static. Carries more CVEs than the default,
+            so use it only for components that need a shell.
     """
 
     passwd(
@@ -83,9 +84,9 @@ def ucs_base(name, repo, python, debian_version, debian_codename, debug = False)
         package_name = "ca-certificates",
     )
 
-    if debug:
+    if shell:
         tar(
-            name = name + "_debug_links",
+            name = name + "_shell_links",
             mtree = [
                 "./bin/busybox type=link link=/usr/bin/busybox",
                 "./bin/sh type=link link=/usr/bin/busybox",
@@ -114,7 +115,7 @@ def ucs_base(name, repo, python, debian_version, debian_codename, debug = False)
             ":" + name + "_group",
             ":" + name + "_os_release",
             ":" + name + "_links",
-        ] + ([":" + name + "_debug_links"] if debug else []),
+        ] + ([":" + name + "_shell_links"] if shell else []),
     )
 
     oci_load(
