@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.24.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.23.0...v0.24.0) (2026-09-07)
+
+
+### Features
+
+* **distroless:** Bazel-built distroless Python base image ([a00a39c](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/a00a39c9af6bc1994b71da4487e59ec556eb9b7c)), closes [#0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/issues/0)
+
+
+### Bug Fixes
+
+* **distroless:** link every busybox applet in the shell variant ([eb321d2](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/eb321d22356a9efeac188aa261e834cd48074819)), closes [#0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/issues/0)
+
 ## [0.23.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.22.0...v0.23.0) (2026-06-05)
 
 
