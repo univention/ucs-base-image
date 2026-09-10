@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.24.2](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.1...v0.24.2) (2026-09-10)
+
+
+### Reverts
+
+* Revert "ci(container-build): use buildkit for container builds" ([76e95ec](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/76e95eceecc759dea9fea8dbc0fb20c56be9ad5d))
+* Revert "ci(container-build): use fakechroot debootstrap variant" ([352a1a5](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/352a1a565a9c948bdbaf78fa47ee15435fb98239))
+* Revert "ci(test-ucs-base-usage-example): do not push image on test" ([7ae2b56](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/7ae2b56d8280a39f13b3426629d15b001fc4519d))
+
 ## [0.24.1](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.0...v0.24.1) (2026-09-10)
 
 
