@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.1](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.0...v0.24.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **ci:** write date-based tags only from the scheduled build ([4fe3117](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/4fe311786a278d965d15621d718167866323b804)), closes [#0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/issues/0)
+
 ## [0.24.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.23.0...v0.24.0) (2026-09-07)
 
 
