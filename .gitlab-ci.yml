@@ -179,7 +179,10 @@ container-add-date-based-tags:
   stage: post-build
   extends: .skopeo
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    # Only the nightly build may write a date-based tag. A push to main later
+    # the same day rebuilt the images and overwrote the tag with a new digest,
+    # which every downstream repo then received as a digest-only renovate MR.
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: "$CI_MERGE_REQUEST_DESCRIPTION =~ /force-date-based-tags/"
     - if: $TEST_DATE_BASED_TAGGING == "true"
   variables:
