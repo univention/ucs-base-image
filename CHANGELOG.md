@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.3](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.2...v0.24.3) (2026-09-10)
+
+
+### Bug Fixes
+
+* **ci:** match the schedule's CI_PIPELINE_SOURCE for date-based tags ([12a59d0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/12a59d06e413f1237f9d625c959371eed013b06a)), closes [#0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/issues/0)
+
 ## [0.24.2](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.1...v0.24.2) (2026-09-10)
 
 
