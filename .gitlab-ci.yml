@@ -382,7 +382,7 @@ distroless-python-push:
 distroless-python-smoke-test:
   extends: ".dind"
   stage: "test"
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:24.0.7"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:29.8.2@sha256:7dcdfc4a20246236f558175182ccace1eb15a41bd3eb119dd2284f393498b7c1"
   needs:
     - "distroless-python-build"
   rules:
