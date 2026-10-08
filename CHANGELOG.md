@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.4](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.3...v0.24.4) (2026-10-08)
+
+
+### Bug Fixes
+
+* add UCS metadata labels ([4083915](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/408391545564580044a1a5b1d830a6f6ea4551af)), closes [univention/dev/internal/team-horizon#25](https://git.knut.univention.de/univention/dev/internal/team-horizon/issues/25)
+
 ## [0.24.3](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.2...v0.24.3) (2026-09-10)
 
 
