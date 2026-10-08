@@ -107,11 +107,15 @@ ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
 ARG ERRATA_LEVEL="0"
+ARG UCS_RELEASE_VERSION=""
+ARG UCS_BASE_BUILD_DATE=""
 
 LABEL org.opencontainers.image.authors="Univention GmbH" \
       org.opencontainers.image.url="https://www.univention.de/" \
       org.opencontainers.image.documentation="https://docs.software-univention.de/n/en/index.html" \
-      com.univention.errata-level="$ERRATA_LEVEL"
+      com.univention.errata-level="$ERRATA_LEVEL" \
+      com.univention.ucs-version="$UCS_RELEASE_VERSION" \
+      com.univention.ucs-base-build-date="$UCS_BASE_BUILD_DATE"
 
 RUN mkdir /entrypoint.d
 COPY entrypoint.sh /

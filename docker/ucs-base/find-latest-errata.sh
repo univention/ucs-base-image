@@ -83,6 +83,7 @@ for ver in "$@"; do
     release=$(ucs_version_to_release "${ver}")
     level=$(fetch_errata_level "${release}" "${errata_json_url}")
     echo "ERRATA_LEVEL_${ver}=${level}" >> "${OUTPUT_FILE}"
+    echo "UCS_RELEASE_VERSION_${ver}=${release}" >> "${OUTPUT_FILE}"
 done
 
 cat "${OUTPUT_FILE}"
