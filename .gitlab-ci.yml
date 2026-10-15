@@ -19,12 +19,6 @@ include:
     ref: "master"
     file:
       - "dind.yml"
-  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man-single@v1.57.0"
-    inputs:
-      parallelism: 1
-      container_image: "gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-525:latest"
-      stage: "post-build"
-      dep_track_tag: "ucs-base-image"
 
 stages:
   - "prepare"
@@ -177,14 +171,6 @@ container-build:
       --build-arg UCS_RELEASE_VERSION=${UCS_RELEASE_VERSION_${UCS_VERSION}}
       --build-arg UCS_BASE_BUILD_DATE=${CI_PIPELINE_CREATED_AT}
       --target ${TARGET}
-
-sbon-scan-and-upload-single-image:
-  needs:
-    - container-build
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
-      when: never
-    - when: always
 
 container-add-date-based-tags:
   stage: post-build
