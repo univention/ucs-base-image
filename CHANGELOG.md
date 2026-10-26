@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.5](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.4...v0.24.5) (2026-10-26)
+
+
+### Bug Fixes
+
+* **renovate:** apply build versioning to the distroless images ([71954ba](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/71954ba10e2855e8b76d846cc04eed7c1ec0a053)), closes [univention/dev/internal/team-nubus#1684](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1684)
+
 ## [0.24.4](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.3...v0.24.4) (2026-10-08)
 
 
