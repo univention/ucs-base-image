@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Univention GmbH
 
-"""Distroless Python base image, built from UCS apt repositories.
+"""Distroless base images, built from UCS apt repositories.
 
 Not a variant of ucs-base: no shell, no apt, no dpkg.
 """
 
 module(
-    name = "ucs_distroless_python",
+    name = "ucs_distroless",
     version = "0.0.0",
 )
 

@@ -76,7 +76,7 @@ def _common_layers(name, repo, debian_version, debian_codename):
         ":" + name + "_os_release",
     ]
 
-def ucs_base(name, repo, python, debian_version, debian_codename, shell = False):
+def ucs_python(name, repo, python, debian_version, debian_codename, shell = False):
     """A minimal Python base image.
 
     Args:

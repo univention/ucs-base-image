@@ -313,7 +313,7 @@ mirror-release:
 
 # Unlike the debootstrap images above, these are built by Bazel: no kaniko, no
 # Docker daemon, no privileged runner. See distroless/README.md.
-.distroless-python:
+.distroless:
   image:
     name: "${DISTROLESS_BAZEL_IMAGE}"
     entrypoint: [""]
@@ -322,15 +322,15 @@ mirror-release:
     - changes:
         - "distroless/**/*"
   cache:
-    key: "distroless-python-bazel"
+    key: "distroless-bazel"
     paths:
       - ".bazel-cache"
   before_script:
     - "cd distroless"
     - "echo 'build --disk_cache=../.bazel-cache' >> .bazelrc"
 
-distroless-python-build:
-  extends: ".distroless-python"
+distroless-build:
+  extends: ".distroless"
   stage: "build"
   script:
     - "bazel build //:ucs530_tarball //:ucs530_ldap_tarball //:ucs530_shell_tarball //:ucs530_nginx_tarball --output_groups=+tarball"
@@ -345,11 +345,11 @@ distroless-python-build:
       - "tarballs/"
     expire_in: "1 day"
 
-distroless-python-push:
+distroless-push:
   extends: ".skopeo"
   stage: "build"
   needs:
-    - "distroless-python-build"
+    - "distroless-build"
     - "pre-semantic-release"
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
@@ -374,7 +374,7 @@ distroless-python-smoke-test:
   stage: "test"
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:24.0.7"
   needs:
-    - "distroless-python-build"
+    - "distroless-build"
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
     - changes:
@@ -408,7 +408,7 @@ distroless-nginx-smoke-test:
   stage: "test"
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:24.0.7"
   needs:
-    - "distroless-python-build"
+    - "distroless-build"
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
     - changes:
@@ -435,8 +435,8 @@ distroless-nginx-smoke-test:
     - "docker rm -f smoke-${CI_JOB_ID}-nginx || true"
     - "docker rmi -f $(docker images -q 'smoke-*') || true"
 
-distroless-python-drift-check:
-  extends: ".distroless-python"
+distroless-drift-check:
+  extends: ".distroless"
   stage: "test"
   rules:
     - if: "$CI_PIPELINE_SOURCE == 'schedule'"

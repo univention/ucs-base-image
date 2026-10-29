@@ -1,12 +1,13 @@
-# ucs-distroless-python
+# Distroless base images
 
-Minimal Python base images built from the UCS apt repositories with Bazel.
+Minimal base images built from the UCS apt repositories with Bazel: Python
+images for services, and an nginx image for frontends.
 
 These images aren't a variant of `ucs-base`. The images under `docker/ucs-base`
 exist so that you can install UCS packages into them. These images have no
 shell, no apt, and no dpkg, so you can't install anything into them. Instead, a
-derived image copies in a prebuilt virtual environment and sets an exec-form
-`ENTRYPOINT`.
+derived image copies in what it runs, such as a prebuilt virtual environment or
+static files.
 
 The images support UCS 5.3 only. A 5.2 variant needs its own manifest, because
 it uses `python3.11` and the bookworm package names differ.
