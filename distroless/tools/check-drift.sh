@@ -2,14 +2,12 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Univention GmbH
 
-# Resolves the curated package list with transitive resolution ON and compares
+# Resolves a curated package list with transitive resolution ON and compares
 # the result against the manifest. Needs network.
+#
+# Usage: tools/check-drift.sh [python|nginx]
 set -euo pipefail
 cd "$(dirname "$0")/.."
-
-CURATED=ucs530-curated.yaml
-PROBE=ucs530-probe.yaml
-PROBE_LOCK=ucs530-probe.lock.json
 
 # Listed on purpose, depended on by nothing.
 DELIBERATE_ORPHANS=(
@@ -17,12 +15,38 @@ DELIBERATE_ORPHANS=(
 )
 
 # The resolver wants these and we deliberately do not ship them.
-DELIBERATE_EXCLUSIONS=(
-    debconf                  # via tzdata; cannot run (no perl, no shell)
-    readline-common          # /etc/inputrc, for an interactive REPL
-    openssl-provider-legacy  # legacy crypto providers, unused
-    mawk                     # arrives with base-files; nothing calls awk
-)
+case "${1:-python}" in
+    python)
+        CURATED=ucs530-curated.yaml
+        PROBE=ucs530-probe.yaml
+        PROBE_REPO=ucs530_probe
+        DELIBERATE_EXCLUSIONS=(
+            debconf                  # via tzdata; cannot run (no perl, no shell)
+            readline-common          # /etc/inputrc, for an interactive REPL
+            openssl-provider-legacy  # legacy crypto providers, unused
+            mawk                     # arrives with base-files; nothing calls awk
+        )
+        ;;
+    nginx)
+        CURATED=ucs530-nginx.yaml
+        PROBE=ucs530-nginx-probe.yaml
+        PROBE_REPO=ucs530_nginx_probe
+        DELIBERATE_EXCLUSIONS=(
+            debconf                  # via nginx-common; cannot run (no perl, no shell)
+            openssl-provider-legacy  # legacy crypto providers, unused
+            mawk                     # arrives with base-files; nothing calls awk
+            iproute2                 # a dependency of the nginx package; the daemon never runs it
+            libbpf1 libcap2 libcap2-bin libcom-err2 libdb5.3t64 libelf1t64     # via iproute2
+            libgssapi-krb5-2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0  # via iproute2
+            libmnl0 libselinux1 libtirpc-common libtirpc3t64 libxtables12      # via iproute2
+        )
+        ;;
+    *)
+        echo "usage: $0 [python|nginx]" >&2
+        exit 2
+        ;;
+esac
+PROBE_LOCK="${PROBE%.yaml}.lock.json"
 
 # Regenerated every run so the probe cannot diverge from the curated list.
 {
@@ -33,7 +57,7 @@ DELIBERATE_EXCLUSIONS=(
 } > "$PROBE"
 
 echo "resolving ${CURATED} with transitive resolution on..."
-bazel run @ucs530_probe//:lock >/dev/null 2>&1
+bazel run "@${PROBE_REPO}//:lock" >/dev/null 2>&1
 
 # No jq in the build image; the lockfile has one "name" key per package.
 pkgs_from_manifest() { sed -n '/^packages:/,$p' "$1" | sed -n 's/^[[:space:]]*- "\([^"]*\)".*/\1/p'; }

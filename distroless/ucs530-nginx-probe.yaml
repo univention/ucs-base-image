@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Univention GmbH
+
+# GENERATED from ucs530-nginx.yaml by tools/check-drift.sh. Do not edit.
+
+# Complete closure for the nginx image, used with resolve_transitive = False.
+# tools/check-drift.sh guards it.
+
+version: 1
+
+sources:
+  - channel: ucs530 main
+    url: https://updates-test.software-univention.de/
+
+archs:
+  - "amd64"
+
+packages:
+  # /etc/debian_version, which trivy needs to detect the OS at all
+  - "base-files"
+
+  - "nginx"
+  - "nginx-common"   # /etc/nginx/mime.types
+
+  # libc and friends
+  - "libc6"
+  - "libgcc-s1"
+  - "gcc-14-base"
+
+  # libraries the nginx binary links
+  - "libcrypt1"
+  - "libpcre2-8-0"
+  - "libssl3t64"
+  - "libzstd1"       # needed by libssl3t64
+  - "zlib1g"

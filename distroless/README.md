@@ -18,6 +18,7 @@ it uses `python3.11` and the bookworm package names differ.
 | `//:ucs530` | 25 | 55 MB | A Python service whose native extensions need nothing beyond glibc, libstdc++, and the libraries that the Python standard library links. Start here |
 | `//:ucs530_ldap` | 36 | 58 MB | A service that talks LDAP through `python-ldap`, or that authenticates with SASL or Kerberos |
 | `//:ucs530_shell` | 26 | 57 MB | Components that need a shell in the container: UCS App Center apps that run in-container scripts, and `kubectl debug` |
+| `//:ucs530_nginx` | 12 | 26 MB | A frontend that nginx serves as static files. It contains no Python. See [Serve a frontend with nginx](#serve-a-frontend-with-nginx) |
 
 For comparison, `ucs-base-python` contains 97 packages and is 252 MB. Sizes are
 for the flattened root filesystem, which is what a node stores.
@@ -131,6 +132,23 @@ kubectl debug -it POD_NAME \
 **Caution:** Prefer the default image. busybox is real code, so this variant
 reports more vulnerabilities than the image it is based on.
 
+## Serve a frontend with nginx
+
+`ucs-distroless-nginx` contains nginx and the libraries it links. Its
+`ENTRYPOINT` runs nginx in the foreground as UID 1000.
+
+*   The default `/etc/nginx/nginx.conf` logs to standard output and standard
+    error and defines no server. Add your server blocks to `/etc/nginx/conf.d/`,
+    or mount your own `nginx.conf`.
+*   nginx writes its PID file to `/run` and temporary files to
+    `/var/lib/nginx`. With a read-only root filesystem, mount an `emptyDir` on
+    both.
+*   As UID 1000, nginx can only listen on port 80 if the pod sets the
+    `net.ipv4.ip_unprivileged_port_start` sysctl. Otherwise, listen on a port
+    above 1023.
+*   The image has no shell, so nothing can generate configuration at container
+    start. Ship configuration files in the derived image or mount them.
+
 ## Develop the images
 
 ### Repository layout
@@ -140,8 +158,10 @@ reports more vulnerabilities than the image it is based on.
 | `ucs530-curated.yaml` | The package list. Start here |
 | `ucs530-ldap.yaml` | The base closure, plus the native dependencies of `python-ldap` and krb5 |
 | `ucs530-shell.yaml` | The base closure, plus busybox |
+| `ucs530-nginx.yaml` | The closure of nginx, without Python |
+| `nginx.conf` | The default nginx configuration of the nginx image |
 | `certs.yaml` | `ca-certificates`, used for the certificate bundle only |
-| `ucs530-probe.yaml` | A generated copy of the curated list, used by the drift check. Committed because `MODULE.bazel` reads it at load time |
+| `ucs530-probe.yaml`, `ucs530-nginx-probe.yaml` | Generated copies of the curated and nginx lists, used by the drift check. Committed because `MODULE.bazel` reads them at load time |
 | `MODULE.bazel` | Connects the manifests to the apt repositories |
 | `BUILD.bazel`, `base.bzl` | Assemble an image |
 | `tools/check-drift.sh` | Checks that the closures are complete |
@@ -171,7 +191,8 @@ Each manifest sets `resolve_transitive = False`, so Bazel installs exactly the
 packages that the manifest lists. When you add a package, add its dependencies
 too.
 
-To verify a closure, run `tools/check-drift.sh`. The script resolves the same
+To verify a closure, run `tools/check-drift.sh python` or
+`tools/check-drift.sh nginx`. The script resolves the same
 list with transitive resolution enabled and fails if the resolver needs a
 package that the manifest omits. The script also lists the deliberate
 exclusions, with a reason for each. Read those reasons before you add an

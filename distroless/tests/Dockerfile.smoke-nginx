@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Univention GmbH
+
+# Builds the way a frontend is expected to: copy content and a server block in.
+# There is no RUN step because the base image has no shell.
+
+ARG BASE_IMAGE
+
+FROM ${BASE_IMAGE}
+
+COPY smoke-nginx.conf /etc/nginx/conf.d/smoke.conf
+COPY smoke-nginx.css /srv/smoke.css

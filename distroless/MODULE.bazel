@@ -48,6 +48,15 @@ apt.install(
 
 use_repo(apt, "ucs530_shell")
 
+apt.install(
+    name = "ucs530_nginx",
+    manifest = "//:ucs530-nginx.yaml",
+    nolock = True,
+    resolve_transitive = False,
+)
+
+use_repo(apt, "ucs530_nginx")
+
 # Separate repo so only the bundle cacerts() generates lands in the image;
 # :flat, and with it ~150 individual .crt files, is never used.
 apt.install(
@@ -67,3 +76,11 @@ apt.install(
 )
 
 use_repo(apt, "ucs530_probe")
+
+apt.install(
+    name = "ucs530_nginx_probe",
+    manifest = "//:ucs530-nginx-probe.yaml",
+    nolock = True,
+)
+
+use_repo(apt, "ucs530_nginx_probe")

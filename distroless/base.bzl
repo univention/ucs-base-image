@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Univention GmbH
 
-"""Minimal Python base image for Nubus services.
+"""Minimal base images for Nubus services.
 
 Each rule produces a tar and oci_image unions them into layers.
 """
@@ -17,18 +17,11 @@ UID = 1000
 GID = 1000
 USERNAME = "app"
 
-def ucs_base(name, repo, python, debian_version, debian_codename, shell = False):
-    """A minimal Python base image.
+def _common_layers(name, repo, debian_version, debian_codename):
+    """Layers every image shares: packages, users, os-release, certificates.
 
-    Args:
-        name: target name, for example "ucs530"
-        repo: apt repo to take the package closure from, for example "ucs530"
-        python: interpreter binary name, for example "python3.13"
-        debian_version: Debian major version, for example "13"
-        debian_codename: for example "trixie"
-        shell: add busybox and its applet symlinks. Requires a repo whose
-            closure contains busybox-static. Carries more CVEs than the default,
-            so use it only for components that need a shell.
+    Returns:
+        the tar labels, in layer order
     """
 
     passwd(
@@ -60,17 +53,6 @@ def ucs_base(name, repo, python, debian_version, debian_codename, shell = False)
         },
     )
 
-    # Some services invoke `python` directly. base-files would normally provide
-    # the /etc/os-release symlink.
-    tar(
-        name = name + "_links",
-        mtree = [
-            "./usr/bin/python type=link link=/usr/bin/" + python,
-            "./usr/bin/python3 type=link link=/usr/bin/" + python,
-            "./etc/os-release type=link link=/usr/lib/os-release",
-        ],
-    )
-
     cacerts(
         name = name + "_cacerts",
         package = "@certs//ca-certificates:data",
@@ -84,6 +66,44 @@ def ucs_base(name, repo, python, debian_version, debian_codename, shell = False)
         package_name = "ca-certificates",
     )
 
+    return [
+        "@%s//:flat" % repo,
+        "@%s//:dpkg_status" % repo,
+        ":" + name + "_cacerts",
+        ":" + name + "_certs_status",
+        ":" + name + "_passwd",
+        ":" + name + "_group",
+        ":" + name + "_os_release",
+    ]
+
+def ucs_base(name, repo, python, debian_version, debian_codename, shell = False):
+    """A minimal Python base image.
+
+    Args:
+        name: target name, for example "ucs530"
+        repo: apt repo to take the package closure from, for example "ucs530"
+        python: interpreter binary name, for example "python3.13"
+        debian_version: Debian major version, for example "13"
+        debian_codename: for example "trixie"
+        shell: add busybox and its applet symlinks. Requires a repo whose
+            closure contains busybox-static. Carries more CVEs than the default,
+            so use it only for components that need a shell.
+    """
+
+    tars = _common_layers(name, repo, debian_version, debian_codename)
+
+    # Some services invoke `python` directly. base-files would normally provide
+    # the /etc/os-release symlink.
+    tar(
+        name = name + "_links",
+        mtree = [
+            "./usr/bin/python type=link link=/usr/bin/" + python,
+            "./usr/bin/python3 type=link link=/usr/bin/" + python,
+            "./etc/os-release type=link link=/usr/lib/os-release",
+        ],
+    )
+    tars.append(":" + name + "_links")
+
     if shell:
         tar(
             name = name + "_shell_links",
@@ -95,6 +115,7 @@ def ucs_base(name, repo, python, debian_version, debian_codename, shell = False)
                 for applet in BUSYBOX_APPLETS
             ],
         )
+        tars.append(":" + name + "_shell_links")
 
     oci_image(
         name = name,
@@ -106,20 +127,57 @@ def ucs_base(name, repo, python, debian_version, debian_codename, shell = False)
             "LANG": "C.UTF-8",
             "PYTHONUNBUFFERED": "1",
         },
-        tars = [
-            "@%s//:flat" % repo,
-            "@%s//:dpkg_status" % repo,
-            ":" + name + "_cacerts",
-            ":" + name + "_certs_status",
-            ":" + name + "_passwd",
-            ":" + name + "_group",
-            ":" + name + "_os_release",
-            ":" + name + "_links",
-        ] + ([":" + name + "_shell_links"] if shell else []),
+        tars = tars,
     )
 
     oci_load(
         name = name + "_tarball",
         image = ":" + name,
         repo_tags = ["ucs-distroless-python:" + name],
+    )
+
+def ucs_nginx(name, repo, debian_version, debian_codename):
+    """A minimal nginx image that runs as an unprivileged user.
+
+    Args:
+        name: target name, for example "ucs530_nginx"
+        repo: apt repo to take the package closure from, for example "ucs530_nginx"
+        debian_version: Debian major version, for example "13"
+        debian_codename: for example "trixie"
+    """
+
+    tars = _common_layers(name, repo, debian_version, debian_codename)
+
+    # The binary has its temp, pid and error log paths compiled in. nginx opens
+    # the error log before it reads the configuration, so it has to exist.
+    tar(
+        name = name + "_nginx",
+        srcs = ["nginx.conf"],
+        mtree = [
+            "./etc/os-release type=link link=/usr/lib/os-release",
+            "./etc/nginx/nginx.conf uid=0 gid=0 mode=0644 type=file content=$(location nginx.conf)",
+            "./etc/nginx/conf.d uid=0 gid=0 mode=0755 type=dir",
+            "./run uid=%d gid=%d mode=0755 type=dir" % (UID, GID),
+            "./var/lib/nginx uid=%d gid=%d mode=0755 type=dir" % (UID, GID),
+            "./var/log/nginx uid=0 gid=0 mode=0755 type=dir",
+            "./var/log/nginx/error.log type=link link=/dev/stderr",
+            "./var/log/nginx/access.log type=link link=/dev/stdout",
+        ],
+    )
+    tars.append(":" + name + "_nginx")
+
+    oci_image(
+        name = name,
+        architecture = "amd64",
+        os = "linux",
+        user = str(UID),
+        env = {"LANG": "C.UTF-8"},
+        entrypoint = ["/usr/sbin/nginx", "-g", "daemon off;"],
+        tars = tars,
+    )
+
+    oci_load(
+        name = name + "_tarball",
+        image = ":" + name,
+        repo_tags = ["ucs-distroless-nginx:" + name],
     )
