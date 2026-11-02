@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.1](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.25.0...v0.25.1) (2026-11-02)
+
+
+### Bug Fixes
+
+* **distroless:** set PATH in the image config ([82a77a1](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/82a77a12f91d8c7a7f6b4b344b601ee9b6e5ff51)), closes [univention/dev/internal/team-nubus#1685](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1685)
+
 ## [0.25.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.5...v0.25.0) (2026-11-02)
 
 
