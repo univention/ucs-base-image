@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.0](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.5...v0.25.0) (2026-11-02)
+
+
+### Features
+
+* **distroless:** add an nginx image ([69af7da](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/commit/69af7da974c2b7516e34e456f11596784fe39940)), closes [univention/dev/internal/team-nubus#1685](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1685)
+
 ## [0.24.5](https://git.knut.univention.de/univention/dev/projects/ucs-base-image/compare/v0.24.4...v0.24.5) (2026-10-26)
 
 
