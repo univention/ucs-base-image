@@ -17,6 +17,8 @@ UID = 1000
 GID = 1000
 USERNAME = "app"
 
+PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
 def _common_layers(name, repo, debian_version, debian_codename):
     """Layers every image shares: packages, users, os-release, certificates.
 
@@ -123,6 +125,7 @@ def ucs_python(name, repo, python, debian_version, debian_codename, shell = Fals
         os = "linux",
         user = str(UID),
         env = {
+            "PATH": PATH,
             "SSL_CERT_FILE": "/etc/ssl/certs/ca-certificates.crt",
             "LANG": "C.UTF-8",
             "PYTHONUNBUFFERED": "1",
@@ -171,7 +174,7 @@ def ucs_nginx(name, repo, debian_version, debian_codename):
         architecture = "amd64",
         os = "linux",
         user = str(UID),
-        env = {"LANG": "C.UTF-8"},
+        env = {"PATH": PATH, "LANG": "C.UTF-8"},
         entrypoint = ["/usr/sbin/nginx", "-g", "daemon off;"],
         tars = tars,
     )
